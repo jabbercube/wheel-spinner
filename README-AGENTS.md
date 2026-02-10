@@ -1,14 +1,14 @@
 # Agents Cheatsheet
 
 ## Claude Code Skills
-- Official docs: https://code.claude.com/docs/en/skills
+Official skills doc: https://code.claude.com/docs/en/skills
 
 ### Built-in
 | Command | Description |
 |---------|-------------|
 | `/clear` | Reset context in between core PIV development cycles |
 
-### Setup
+### Init
 Setup a project and its documentation.
 
 | Command | Description |
@@ -17,7 +17,7 @@ Setup a project and its documentation.
 | `/init-create-reference` | Generate one file per module so we can split context and load only what's relevant |
 | `/init-start-project` | Install dependencies, start backend and frontend servers |
 
-### Core Development Loop
+### Core PIV Loop
 Create bite-sized features using the `Plan → Implement → Validate` development cycle.
 
 | Command | Description |
@@ -53,7 +53,7 @@ Fix, release, and deploy the codebase.
 
 ## Key concepts
 ### Prioritize PRD-first development
-Create documentation before you code. Your `.agents/PRD.md` becomes the source of truth for every AI 
+Create documentation before you code. Your `docs/PRD.md` becomes the source of truth for every AI 
 conversation and for each granular feature. Without it AI can make bad assumptions and will context drift. 
 So for:
 - New projects:  Full PRD with features broken down into phases
@@ -73,7 +73,7 @@ For example, create:
     │   └── deploy.md       # deployment best practices
     └── GLOBAL-CONTEXT.md   # global context and rules for AI agents
 
-The `.agents/GLOBAL-CONTEXT.md` file mentions each reference material for the AI agent to discover. 
+The `CLAUDE.md` file mentions each reference material for the AI agent to discover. 
 And when working on a given module ensure the AI agent loads only necessary reference documentation 
 for the current task at hand.  Limit context bloat as much as possible.
 
@@ -100,10 +100,8 @@ For example,
     │       └── feature-dashboard.md                  # desired state for dashboard; evolves over time 
     └ ...
 
-
 ### Start planning with the `prime` command
 Start each planning session with the `prime` command to load repeatable, predictable context every time.
-
 
 ### Adopt an evolution mindset
 If you do something more than a few times, create a new command. 
@@ -133,3 +131,34 @@ Conversations with an agent can include:
 - Validation strategy
 - Desired codebase structure
 
+
+## Optimization Strategies
+Claude Code is much more token-intensive than regular chat.
+- It reads your entire codebase for context
+- Extended sessions, large/complex files, bigger projects, and parallel sessions all consume limits faster
+- Opus 4 consumes resources approximately 5× faster than Sonnet 4
+
+### 1. Use the Right Model
+- Stick with Sonnet 4.5 for most tasks - it's much more efficient
+- Only switch to Opus for complex architectural decisions
+- Check which model you're using with /model command
+
+### 2. Manage Your Context
+- Use /clear or /compact commands to reset or summarize conversation history
+- Create a concise CLAUDE.md file in your project root with essential context instead of letting Claude read everything
+- Be selective about which files Claude analyzes
+
+### 3. Optimize Your Prompts
+- Batch multiple questions into one message rather than sending several separate prompts
+- Be specific about what files/sections Claude should focus on
+- Avoid broad requests like "analyze my entire codebase"
+
+### 4. Monitor Your Usage
+- Use the /cost command in Claude Code to track token consumption in real-time
+- Check your usage regularly in Settings → Usage
+- Plan intensive coding sessions around your 5-hour reset cycles
+
+### 5. Consider Your Workflow
+- Avoid running multiple Claude Code sessions simultaneously
+- For simple edits, consider doing them manually rather than asking Claude
+- Use Claude Code strategically for complex problems, not routine tasks
