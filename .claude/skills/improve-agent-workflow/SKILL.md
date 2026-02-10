@@ -17,14 +17,14 @@ argument-hint: "[feature-id]"
 
 ### 2. Understand our current workflow
 
-- Review global rules document `/.agents/GLOBAL-CONTEXT.md`
-- Review product requirement document `/.agents/PRD.md`
+- Review global rules document `CLAUDE.md`
+- Review product requirement document `/docs/PRD.md`
 - Review any relevant reference documents `/.agents/reference/`
 - Review used project AI agent skills `/.claude/skills/`
 - Review any documents referenced by the system review document
 
 ## Implementation Instructions
 
-### 3. Propose a solution to improve this project
+### 1. Propose a solution to improve this project
 
 Propose what should change in this project so the issues mentioned in the system review document don't happen again.

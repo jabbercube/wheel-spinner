@@ -1,5 +1,5 @@
 ---
-name: setup-init-project
+name: init-start-project
 description: Initialize and set up the project for local development
 ---
 

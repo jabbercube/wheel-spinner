@@ -1,5 +1,5 @@
 ---
-name: setup-create-prd
+name: init-create-prd
 description: Create a Product Requirements Document from conversation context
 argument-hint: "[output-filename]"
 ---
@@ -12,7 +12,7 @@ Generate a comprehensive Product Requirements Document (PRD) based on the curren
 
 ## Output File
 
-Write the PRD to: `$ARGUMENTS` (default: `PRD.md`)
+If `$ARGUMENTS` is provided, write the PRD to that path. Otherwise, use the default filename `PRD.md` and place it in `docs/` if that directory exists, or in the project root if it does not.
 
 ## PRD Structure
 
