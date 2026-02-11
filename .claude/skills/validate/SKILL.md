@@ -1,11 +1,11 @@
 ---
 name: validate
-description: Run comprehensive validation of the Habit Tracker project including linting, tests, coverage, and build.
+description: Run comprehensive validation of this project including linting, tests, coverage, and build.
 ---
 
 # Comprehensive Validation
 
-Run comprehensive validation of the Habit Tracker project.
+Run comprehensive validation of this project.
 
 Execute the following commands in sequence and report results:
 

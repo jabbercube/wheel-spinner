@@ -1,5 +1,5 @@
 ---
-name: init-start-project
+name: init-skill-project-up
 description: Initialize and set up the project for local development
 ---
 

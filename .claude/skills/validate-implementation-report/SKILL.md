@@ -1,9 +1,9 @@
 ---
-name: validate-execution-report
+name: validate-implementation-report
 description: Generate implementation report for system review after completing a feature
 ---
 
-# Execution Report
+# Implementation Report
 
 Review and deeply analyze the implementation you just completed.
 
@@ -18,7 +18,7 @@ You have just finished implementing a feature. Before moving on, reflect on:
 
 ## Generate Report
 
-Save to: `.agents/execution-reports/[feature-name].md`
+Save to: `.agents/implementation-reports/[feature-name].md`
 
 ### Meta Information
 

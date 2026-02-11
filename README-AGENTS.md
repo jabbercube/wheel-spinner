@@ -14,7 +14,7 @@ Setup a project and its documentation.
 | Command | Description |
 |---------|-------------|
 | `/init-create-prd` | Generate Product Requirements Document from conversation |
-| `/init-create-reference` | Generate one file per module so we can split context and load only what's relevant |
+| `/init-create-context-modules` | Generate one file per module so we can split context and load only what's relevant |
 | `/init-start-project` | Install dependencies, start backend and frontend servers |
 
 ### Core PIV Loop
@@ -30,7 +30,7 @@ Create bite-sized features using the `Plan → Implement → Validate` developme
 | `/validate-run-tests` | Run full validation: tests, linting, coverage, frontend build |
 | `/validate-code-review` | Technical code review on changed files |
 | `/validate-code-review-fix` | Fix issues found in code review |
-| `/validate-execution-report` | Generate report after implementing a feature |
+| `/validate-implementation-report` | Generate report after implementing a feature |
 | `/validate-system-review` | Analyze implementation vs plan for process improvements |
 
 ### Improve
@@ -67,14 +67,14 @@ Aggressively limit the size and scope of global rules.
 For example, create:
 
     .agents/
-    ├── reference/
+    ├── context-modules/
     │   ├── components.md   # frontend best practices
     │   ├── api.md          # backend best practices
     │   └── deploy.md       # deployment best practices
     └── GLOBAL-CONTEXT.md   # global context and rules for AI agents
 
-The `CLAUDE.md` file mentions each reference material for the AI agent to discover. 
-And when working on a given module ensure the AI agent loads only necessary reference documentation 
+The `CLAUDE.md` file mentions each `context-modules` reference material for the AI agent to discover. 
+And when working on a given module ensure the AI agent loads only necessary context-modules documentation 
 for the current task at hand.  Limit context bloat as much as possible.
 
 ### Add bite-size features in cycles
@@ -105,11 +105,11 @@ Start each planning session with the `prime` command to load repeatable, predict
 
 ### Adopt an evolution mindset
 If you do something more than a few times, create a new command. 
-Over time your agent commands and reference documentation should become specific to each project.
+Over time your agent commands and context-modules documentation should become specific to each project.
 In addition, treat every bug as an opportunity to evolve your AI coding system. 
 For each bug you can also fix:
 - Global rules
-- On demand context and references
+- On demand context-modules
 - Commands & workflows
 
 For example,
@@ -117,7 +117,7 @@ For example,
 |-----|-----------|
 | AI uses wrong import style | New rule: always use @/ path aliases |
 | AI forgets to run tests | Update structured plan to include section for tests to always run |
-| AI doesn't understand auth flow | New context reference doc: auth_architecture.md |
+| AI doesn't understand auth flow | New context-modules doc: auth_architecture.md |
 
 Every time you develop a new feature, your coding agent should become smarter.
 
@@ -126,7 +126,7 @@ Conversations with an agent can include:
 - Goals
 - Success criteria
 - What not to do
-- Documentation to reference
+- Documentation to context-modules
 - Task list
 - Validation strategy
 - Desired codebase structure

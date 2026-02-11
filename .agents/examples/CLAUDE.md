@@ -38,24 +38,24 @@
     │   └── e2e/                  # Playwright E2E tests
     └── .agents/
         ├── PRD.md                # Product requirements
-        └── reference/            # Best practices docs
+        └── context-modules/      # Best practices docs
 
 ## Commands
 (REPLACE) With commands to start the backend, frontend, run tests, etc.
 
 
-## Reference Documentation
-Reference only the documents that are relevant when working on specific areas:
+## Context Modules Documentation
+Reference only the context-modules documents that are relevant when working on specific areas:
 
 | Document                                            | When to Read |
 |-----------------------------------------------------|--------------|
 | .agents/PRD.md                                      | Understanding requirements, features, API spec |
-| .agents/reference/fastapi-best-practices.md         | (REPLACE) Building API endpoints, Pydantic schemas, dependencies |
-| .agents/reference/sqlite-best-practices.md          | (REPLACE) Database schema, queries, SQLAlchemy patterns |
-| .agents/reference/react-frontend-best-practices.md  | (REPLACE) Components, hooks, state management, forms |
-| .agents/reference/testing-best-practices.md         | (REPLACE) unit/integration/E2E testing patterns | 
-| .agents/reference/logging-best-practices.md         | (REPLACE) structlog setup |
-| .agents/reference/deployment-best-practices.md      | (REPLACE) Docker, production builds, deployment |
+| .agents/context-modules/fastapi-best-practices.md         | (REPLACE) Building API endpoints, Pydantic schemas, dependencies |
+| .agents/context-modules/sqlite-best-practices.md          | (REPLACE) Database schema, queries, SQLAlchemy patterns |
+| .agents/context-modules/react-frontend-best-practices.md  | (REPLACE) Components, hooks, state management, forms |
+| .agents/context-modules/testing-best-practices.md         | (REPLACE) unit/integration/E2E testing patterns | 
+| .agents/context-modules/logging-best-practices.md         | (REPLACE) structlog setup |
+| .agents/context-modules/deployment-best-practices.md      | (REPLACE) Docker, production builds, deployment |
 
 
 ## Code Conventions

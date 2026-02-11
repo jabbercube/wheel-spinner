@@ -1,6 +1,6 @@
 ---
-name: init-create-prd
-description: Create a Product Requirements Document from conversation context
+name: init-doc-prd
+description: Create or revise the Product Requirements Document from conversation context
 argument-hint: "[output-filename]"
 ---
 

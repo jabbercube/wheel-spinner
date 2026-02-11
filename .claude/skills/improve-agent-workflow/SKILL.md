@@ -19,7 +19,7 @@ argument-hint: "[feature-id]"
 
 - Review global rules document `CLAUDE.md`
 - Review product requirement document `/docs/PRD.md`
-- Review any relevant reference documents `/.agents/reference/`
+- Review any relevant context-modules reference documents `/.agents/context-modules/`
 - Review used project AI agent skills `/.claude/skills/`
 - Review any documents referenced by the system review document
 
