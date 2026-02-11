@@ -15,27 +15,6 @@ limitations under the License.
 -->
 <template>
   <div>
-    <b-modal :active.sync="displayLoginDialog" :width="640" scroll="keep">
-      <div class="modal-card" style="width: auto">
-        <header class="modal-card-head">
-          <p class="modal-card-title">
-            <i class="fa fa-folder-open"></i>&nbsp;{{ $t('opendialog.Open wheel') }}
-          </p>
-        </header>
-        <section class="modal-card-body can-go-dark">
-          <p>
-            {{ $t('opendialog.To open wheels') }}
-          </p>
-          <div id="auth-container"></div>
-        </section>
-        <footer class="modal-card-foot" style="justify-content:flex-end">
-          <b-button @click="enter_inactive()">
-            {{ $t('common.Cancel') }}
-          </b-button>
-        </footer>
-      </div>
-    </b-modal>
-
     <b-modal :active.sync="displayWheelDialog" :width="640" scroll="keep">
       <div class="modal-card" style="width: auto">
         <header class="modal-card-head">
@@ -95,14 +74,6 @@ limitations under the License.
       noSavedWheels() {
         return (this.savedWheels.length==0);
       },
-      displayLoginDialog: {
-        get: function() {
-          return this.fsm=='userIsPickingLoginMethod';
-        },
-        set: function(newValue) {
-          if (newValue == false) this.fsm = 'inactive';
-        }
-      },
       displayWheelDialog: {
         get: function() {
           const states = ['userIsPickingWheel', 'confirmingDelete', 'deletingWheel'];
@@ -121,9 +92,8 @@ limitations under the License.
       async enter_loadingLibraries() {
         this.fsm = 'loadingLibraries';
         this.$emit('start-wait-animation');
-        let userIsLoggedIn;
         try {
-          userIsLoggedIn = await this.$store.dispatch('userIsLoggedIn');
+          await this.$store.dispatch('userIsLoggedIn');
         }
         catch(ex) {
           this.enter_authError(ex);
@@ -131,31 +101,10 @@ limitations under the License.
         finally {
           this.$emit('stop-wait-animation');
         }
-        if (userIsLoggedIn) {
-          this.enter_loadingWheels();
-        }
-        else {
-          this.enter_userIsPickingLoginMethod();
-        }
+        this.enter_loadingWheels();
       },
       enter_inactive() {
         this.fsm = 'inactive';
-      },
-      enter_userIsPickingLoginMethod() {
-        this.fsm = 'userIsPickingLoginMethod';
-        this.$nextTick(async function() {
-          try {
-            Util.displayWindowsRtWarning();
-            Util.trackEvent('Wheel', `LoginForOpenAttempt`, '');
-            await this.$store.dispatch('loginWithUi', 'auth-container');
-            Util.trackEvent('Wheel', `LoginForOpenSuccess`, '');
-            this.enter_loadingWheels();
-          }
-          catch (ex) {
-            Util.trackEvent('Wheel', `LoginForOpenFailure`, ex.toString());
-            this.enter_authError(ex);
-          }
-        })
       },
       enter_userIsPickingWheel() {
         this.fsm = 'userIsPickingWheel';

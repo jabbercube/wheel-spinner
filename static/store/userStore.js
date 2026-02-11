@@ -18,8 +18,8 @@ import * as Firebase from '../Firebase.js';
 
 export default {
   state: {
-    userPhotoUrl: '',
-    userDisplayName: '',
+    userPhotoUrl: '/images/user_profile.png',
+    userDisplayName: 'Local User',
     savedWheels: [],
     sharedWheels: []
   },
@@ -43,8 +43,8 @@ export default {
       state.sharedWheels = sharedWheels;
     },
     clearUser(state) {
-      state.userPhotoUrl = '';
-      state.userDisplayName = '';
+      state.userPhotoUrl = '/images/user_profile.png';
+      state.userDisplayName = 'Local User';
       state.savedWheels = [];
       state.sharedWheels = [];
     },
@@ -52,58 +52,32 @@ export default {
   actions: {
     async userIsLoggedIn({state, commit, rootState}) {
       await Firebase.loadLibraries();
-      const loggedIn = await Firebase.userIsLoggedIn();
-      if (loggedIn) {
-        const user = await Firebase.getLoggedInUser();
-        commit('setUserPhotoUrl', user.photoURL);
-        commit('setUserDisplayName', user.displayName);  
-      }
-      return loggedIn;
+      return true;
     },
     async logOut({state, commit, rootState}) {
-      Firebase.logOut();
       commit('clearUser');
     },
     async deleteAccount({state, commit, rootState}) {
-      const idToken = await Firebase.getUserIdToken();
-      await ServerFunctions.deleteAccount(idToken);
-      Firebase.logOut();
-      commit('clearUser');
+      // No-op: no auth in this iteration
     },
     async loginAnonymously(context) {
-      await Firebase.logInAnonymously();
+      // No-op: always logged in
     },
     async loginWithUi({state, commit, rootState}, elementName) {
-      const anonymousTokenId = await Firebase.getAnonymousTokenId();
-      const user = await Firebase.loadAuthUserInterface(elementName);
-      commit('setUserPhotoUrl', user.photoURL);
-      commit('setUserDisplayName', user.displayName);
-      await ServerFunctions.convertAccount(
-        anonymousTokenId, await Firebase.getUserIdToken()
-      );
+      // No-op: always logged in
     },
     async logInToSheets({state, commit, rootState}, locale) {
-      await Firebase.loadLibraries();
-      const anonymousTokenId = await Firebase.getAnonymousTokenId();
-      const accessToken = await Firebase.logInToSheets(locale);
-      const user = await Firebase.getLoggedInUser();
-      commit('setUserPhotoUrl', user.photoURL);
-      commit('setUserDisplayName', user.displayName);
-      await ServerFunctions.convertAccount(
-        anonymousTokenId, await Firebase.getUserIdToken()
-      );
-      return accessToken;
+      throw new Error('Google Sheets integration not available');
     },
     async logUserActivity() {
-      await Firebase.logUserActivity();
+      // No-op
     },
     async getUid() {
-      return await Firebase.getUid();
+      return 'default';
     },
     async loadSavedWheels(context) {
       const wheels = await Firebase.getWheels();
       context.commit('setSavedWheels', wheels);
-      Firebase.logUserActivity();
     },
     async logWheelRead(context, wheelTitle) {
       await Firebase.logWheelRead(wheelTitle);
@@ -115,20 +89,16 @@ export default {
       await Firebase.saveWheel(wheelConfig.getValues());
     },
     async loadSharedWheels(context) {
-      const idToken = await Firebase.getUserIdToken();
-      const wheels = await ServerFunctions.getSharedWheels(idToken);
+      const wheels = await ServerFunctions.getSharedWheels();
       context.commit('setSharedWheels', wheels);
-      Firebase.logUserActivity();
     },
     async shareWheel(context, {wheelConfig, copyableWheel}) {
-      const idToken = await Firebase.getUserIdToken();
       return await ServerFunctions.createSharedWheel(
-        copyableWheel, wheelConfig, idToken
+        copyableWheel, wheelConfig
       );
     },
     async deleteSharedWheel(context, path) {
-      const idToken = await Firebase.getUserIdToken();
-      const wheels = await ServerFunctions.deleteSharedWheel(idToken, path);
+      const wheels = await ServerFunctions.deleteSharedWheel(path);
       context.commit('setSharedWheels', wheels);
     }
   }

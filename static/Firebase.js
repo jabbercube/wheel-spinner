@@ -13,235 +13,174 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import * as Util from './Util.js';
-import * as FirebaseAuth from './FirebaseAuth.js';
-import * as Firestore from './Firestore.js';
-import * as Locales from './Locales.js';
-import { loadCSS } from 'fg-loadcss';
 
-let firebase;
-let firebaseui;
-let ui;
+const defaultUser = {
+  uid: 'default',
+  displayName: 'Local User',
+  photoURL: '/images/user_profile.png',
+  isAnonymous: false,
+  getIdToken: () => 'no-auth'
+};
 
 export async function loadLibraries() {
-  if (!firebase) {
-    await importFirebaseLibs();
-    initializeFirebase(firebase);
-    enableOfflinePersistence(firebase);
-  }
+  // No-op: no Firebase libraries to load
 }
 
 export async function userIsLoggedIn() {
-  return await FirebaseAuth.userIsLoggedIn(firebase.auth());
+  return true;
 }
 
 export async function getLoggedInUser() {
-  return await FirebaseAuth.getLoggedInUser(firebase.auth());
+  return defaultUser;
 }
 
 export async function getUserIdToken() {
-  const user = await getLoggedInUser();
-  if (user) {
-    return await user.getIdToken();
-  }
+  return 'no-auth';
 }
 
 export async function getUid() {
-  const user = await getLoggedInUser();
-  if (user) {
-    return user.uid;
-  }
+  return 'default';
 }
 
 export async function getAnonymousTokenId() {
-  const user = await getLoggedInUser();
-  if (user && user.isAnonymous) {
-    return await user.getIdToken();
-  }
+  return null;
 }
 
 export function loadAuthUserInterface(elementName) {
-  loadCSS('https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css');
-  return new Promise(function(resolve, reject) {
-    if (!ui) {
-      ui = new firebaseui.auth.AuthUI(firebase.auth());
-    }
-    ui.start(`#${elementName}`, {
-      signInFlow: 'popup',
-      credentialHelper: firebaseui.auth.CredentialHelper.NONE,
-      signInOptions: [
-        {
-          provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          customParameters: {
-            prompt: 'select_account'
-          }
-        },
-        firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID
-      ],
-      callbacks: {
-        signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-          resolve(authResult.user);
-        },
-      },
-      tosUrl: '/faq/terms',
-      privacyPolicyUrl: '/privacy-policy.html'
-    });
-  })
+  return Promise.resolve(defaultUser);
 }
-  
+
 export async function logIn(providerName, locale) {
-  const auth = firebase.auth();
-  auth.languageCode = Locales.getLoginLocale(providerName, locale);
-  const provider = getProvider(providerName);
-  return await FirebaseAuth.logIn(auth, provider);
+  return defaultUser;
 }
 
 export async function logInAnonymously() {
-  const auth = firebase.auth();
-  return await FirebaseAuth.logInAnonymously(auth);
+  return defaultUser;
 }
 
 export async function logInToSheets(locale) {
-  const auth = firebase.auth();
-  auth.languageCode = Locales.getLoginLocale('Google', locale);
-  const provider = getProvider('Google');
-  return await FirebaseAuth.logInToSheets(auth, provider);
+  throw new Error('Google Sheets integration not available');
 }
 
 export function logOut() {
-  try {
-    firebase.auth().signOut();
-  }
-  catch (ex) {
-  }
+  // No-op
 }
 
 export async function logUserActivity() {
-  const uid = await getUid();
-  if (uid) {
-    const serverNow = firebase.firestore.FieldValue.serverTimestamp();
-    return Firestore.logUserActivity(firebase.firestore(), serverNow, uid);
-  }
+  // No-op
 }
 
 export async function getWheels() {
-  const uid = await getUid();
-  return Firestore.getWheels(firebase.firestore(), uid);
+  const response = await fetch('/api/wheels');
+  const data = await response.json();
+  return data.wheels;
 }
 
 export async function setAdminsWheelsToZero(adminsUid) {
-  return Firestore.setAdminsWheelsToZero(firebase.firestore(), adminsUid);
+  await fetch(`/api/admins/${encodeURIComponent(adminsUid)}/reset-reviews`, {
+    method: 'POST'
+  });
 }
 
 export async function logWheelRead(wheelTitle) {
-  const uid = await getUid();
-  const serverNow = firebase.firestore.FieldValue.serverTimestamp();
-  await Firestore.logWheelRead(firebase.firestore(), serverNow, uid, wheelTitle);
+  // No-op for saved wheel reads in this iteration
 }
 
 export async function deleteSavedWheel(wheelTitle) {
-  const uid = await getUid();
-  await Firestore.deleteSavedWheel(firebase.firestore(), uid, wheelTitle);
+  await fetch(`/api/wheels/${encodeURIComponent(wheelTitle)}`, {
+    method: 'DELETE'
+  });
 }
 
 export async function saveWheel(config) {
-  const uid = await getUid();
-  const serverNow = firebase.firestore.FieldValue.serverTimestamp();
-  await Firestore.saveWheel(firebase.firestore(), serverNow, uid, config);
+  await fetch('/api/wheels', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({config: config})
+  });
 }
 
 export async function getDirtyWords() {
-  return await Firestore.getDirtyWords(firebase.firestore());
+  const response = await fetch('/api/settings/dirty-words');
+  return await response.json();
 }
 
 export async function setDirtyWords(words) {
-  await Firestore.setDirtyWords(firebase.firestore(), words);
+  await fetch('/api/settings/dirty-words', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({words: words})
+  });
 }
 
 export async function getAdmins() {
-  return await Firestore.getAdmins(firebase.firestore());
+  const response = await fetch('/api/admins');
+  return await response.json();
 }
 
 export async function getEarningsPerReview() {
-  return await Firestore.getEarningsPerReview(firebase.firestore());
+  const response = await fetch('/api/settings/earnings-per-review');
+  return await response.json();
 }
 
 export async function deleteAdmin(uid) {
-  await Firestore.deleteAdmin(firebase.firestore(), uid);
+  await fetch(`/api/admins/${encodeURIComponent(uid)}`, {
+    method: 'DELETE'
+  });
 }
 
 export async function addAdmin(uid, name) {
-  await Firestore.addAdmin(firebase.firestore(), uid, name);
+  await fetch('/api/admins', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({uid: uid, name: name})
+  });
 }
 
 export async function saveCarousel(carousel) {
-  await Firestore.saveCarousel(firebase.firestore(), carousel);
-}
-
-export function getDb() {
-  return firebase.firestore();
+  await fetch('/api/carousels', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({carousel: carousel})
+  });
 }
 
 export async function approveSharedWheel(path) {
-  const increment = firebase.firestore.FieldValue.increment(1);
-  const uid = await getUid();
-  await Firestore.approveSharedWheel(firebase.firestore(), increment, path, uid);
+  await fetch(`/api/review-queue/${encodeURIComponent(path)}/approve`, {
+    method: 'POST'
+  });
 }
 
 export async function deleteSharedWheel(path, incReviewCount) {
-  const uid = await getUid();
-  const increment = incReviewCount ? firebase.firestore.FieldValue.increment(1):
-                                     firebase.firestore.FieldValue.increment(0);
-  await Firestore.deleteSharedWheel(firebase.firestore(), increment, path, uid);
+  await fetch(`/api/review-queue/${encodeURIComponent(path)}/delete`, {
+    method: 'POST'
+  });
 }
 
 export async function resetSessionReviews(uid) {
-  await Firestore.resetSessionReviews(firebase.firestore(), uid);
+  await fetch(`/api/admins/${encodeURIComponent(uid)}/reset-session`, {
+    method: 'POST'
+  });
 }
 
 export async function getSharedWheel(path) {
-  return await Firestore.getSharedWheel(firebase.firestore(), path);
+  const response = await fetch(`/api/shared-wheels/${encodeURIComponent(path)}`);
+  const data = await response.json();
+  if (data.wheelConfig && !data.wheelConfig.wheelNotFound) {
+    return {
+      path: path,
+      config: data.wheelConfig.wheelConfig,
+      copyable: data.wheelConfig.copyable,
+      reviewStatus: data.wheelConfig.reviewStatus,
+      created: null,
+      lastRead: null,
+      readCount: 0
+    };
+  }
+  return null;
 }
 
 export async function getNextSharedWheelForReview() {
-  return await Firestore.getNextSharedWheelForReview(firebase.firestore());
-}
-
-async function importFirebaseLibs() {
-  firebase = await import(/* webpackChunkName: "firebase" */ 'firebase/app');
-  await import(/* webpackChunkName: "firebase" */ 'firebase/auth');
-  await import(/* webpackChunkName: "firebase" */ 'firebase/firestore');
-  firebaseui = await import(/* webpackChunkName: "firebase" */ 'firebaseui');
-}
-
-function initializeFirebase(firebase) {
-  const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    databaseURL: process.env.FIREBASE_DATABASE_URL,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    timestampsInSnapshots: true
-  };
-  firebase.initializeApp(firebaseConfig);  
-}
-
-function enableOfflinePersistence(firebase) {
-  const db = firebase.firestore();
-  if (Util.browserCanHandlePersistance(navigator.userAgent)) {
-    try {
-      db.enablePersistence({synchronizeTabs:true})
-    }
-    catch (ex) {
-    }
-  }
-}
-
-function getProvider(providerName) {
-  const providers = {
-    'google':   new firebase.auth.GoogleAuthProvider(),
-    'facebook': new firebase.auth.FacebookAuthProvider(),
-    'twitter':  new firebase.auth.TwitterAuthProvider(),
-  };
-  return providers[providerName.toLowerCase()] || providers['google'];
+  const response = await fetch('/api/review-queue/next');
+  return await response.json();
 }

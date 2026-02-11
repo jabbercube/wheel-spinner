@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-rm -r dist/*
-npx webpack --config build/dev.config.js
+rm -rf dist/*
+NODE_OPTIONS=--openssl-legacy-provider npx webpack --config build/dev.config.js

@@ -35,8 +35,12 @@ export const timeago = (pastTime, currentTime) => {
 }
 
 export const firestoremilliseconds = (timestamp) => {
-  if (timestamp && timestamp._seconds) return timestamp._seconds * 1000;
-  if (timestamp && timestamp.seconds) return timestamp.seconds * 1000;
+  if (!timestamp) return null;
+  if (timestamp._seconds) return timestamp._seconds * 1000;
+  if (timestamp.seconds) return timestamp.seconds * 1000;
+  if (typeof timestamp === 'string') return new Date(timestamp).getTime();
+  if (typeof timestamp === 'number') return timestamp;
+  return null;
 }
 
 export const dollaramount = (amount) => {
