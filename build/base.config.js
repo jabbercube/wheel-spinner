@@ -140,7 +140,7 @@ module.exports = {
         /faq/, /privacy/, /translate/, /404/, /vendors~/, /^locale/,
         /admin/, /index/, /classroom/, /tutorials/, /polyfill/, /precache/,
         /vendor/, /view/, /e628cc/, /shared/, /carousel/, /notFound/, /export/,
-        /firebase/, /howler/, /translations/, /vibrant/, /workbox/
+        /howler/, /translations/, /vibrant/, /workbox/
       ],
       skipWaiting: true,
       clientsClaim: true,

@@ -575,12 +575,14 @@ node server.js
 - `static/FirebaseAuth.js` (already done in Task 4)
 - `static/Firestore.js` (already done in Task 4)
 
-**Files to KEEP but are now dormant:**
+**Files to KEEP but are now dormant (originally kept for reference):**
 - `functions/` directory — keep for reference, not used at runtime
 - `firebase.json` — keep for reference
 - `firestore.rules` — keep for reference
 - `firestore.indexes.json` — keep for reference
 - `.firebaserc` — keep for reference
+
+**NOTE**: Full cleanup of dormant Firebase files (functions/, ml/, firebase.json, firestore.rules, firestore.indexes.json, deploy scripts) was completed in follow-up feature `remove-firebase-legacy-files`. See `.agents/plans/features/remove-firebase-legacy-files.md` for details.
 
 **VALIDATE**: `./build_dev.sh && node server.js` — app runs correctly.
 
@@ -716,7 +718,7 @@ kill %1
 
 5. **Google Sheets and Twitter integration disabled**: These require external API keys and OAuth. They won't work in the simplified setup. The UI elements remain but will fail gracefully or return empty results.
 
-6. **`functions/` directory kept**: Not deleted to avoid data loss. Can be removed in a future cleanup.
+6. **`functions/` directory**: Originally kept for reference to avoid data loss. Later removed in cleanup (see `remove-firebase-legacy-files` feature).
 
 7. **better-sqlite3 WAL mode**: Enables concurrent reads during writes. Important since Express handles multiple requests.
 

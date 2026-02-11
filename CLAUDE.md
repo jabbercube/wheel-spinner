@@ -67,13 +67,6 @@ npm test                     # Mocha tests with Babel (test/*.js)
                             # Current status: 116 tests passing, 0 failures
 ```
 
-**Legacy (unused):**
-```bash
-cd functions && npm run lint  # ESLint for Cloud Functions (functions/ kept for reference)
-./deploy_test.sh             # firebase deploy (no longer used)
-./deploy_prod.sh             # firebase deploy (no longer used)
-```
-
 ## Architecture
 
 ### Frontend (`/static/`)
@@ -109,15 +102,6 @@ cd functions && npm run lint  # ESLint for Cloud Functions (functions/ kept for 
 - **Authentication**: Single default user (`uid: 'default'`), no auth middleware
 - **API Endpoints**: 30+ endpoints for wheels, sharing, admin, settings, review queue
 
-### Legacy Backend (Reference Only: `/functions/`)
-The `functions/` directory contains the original Firebase Cloud Functions backend. These files are kept for reference but are NOT used in the current Express implementation.
-- Firebase Cloud Functions (Node.js) in `functions/index.js`
-- Key services: `SharedWheelService.js`, `AccountService.js`, `TwitterService.js`
-- GCP services used: Firestore, BigQuery, Cloud Storage, Translate, AutoML
-
-### Legacy ML (Reference Only: `/ml`)
-- Planning to remove this and any references to it
-
 ### Build System (`/build/`)
 - Webpack 5 with Babel (targets IE11+)
 - Configs: `base.config.js` (shared), `dev.config.js`, `test.config.js`, `prod.config.js`
@@ -138,12 +122,6 @@ The `functions/` directory contains the original Firebase Cloud Functions backen
 - Wheel configs stored as JSON strings
 - Dates stored as ISO strings (e.g., "2026-02-11T12:34:56.789Z")
 - Parsed by `firestoremilliseconds` filter in `static/filters.js`
-
-### Legacy: Firestore Data Model (Reference Only)
-The original Firebase backend used Firestore collections. This is kept for reference only:
-- `shared-wheels` collection indexed by readCount+created and uid+created
-- Account data isolated by UID/email
-- Admin access controlled by `admins` collection checked in `firestore.rules`
 
 ### Localization
 - Locale files in `static/locales/` (e.g., `en-US.json`)
@@ -180,11 +158,6 @@ The original Firebase backend used Firestore collections. This is kept for refer
 - `test/test-CircularCounter.js` — 2 tests
 - **Total**: 116 tests, all passing
 
-**Legacy (Reference Only):**
-- `firebase.json` — Original hosting config (dormant)
-- `firestore.rules` — Original security rules (dormant)
-- `functions/` — Original Cloud Functions backend (kept for reference, not used)
-
 ## Important Notes
 
 ### Testing
@@ -198,7 +171,6 @@ The original Firebase backend used Firestore collections. This is kept for refer
 **High Priority:**
 - ⚠️ **Vue 2 EOL**: Framework reached end-of-life Dec 31, 2023 (no security patches). Migration to Vue 3 should be planned.
 - ⚠️ **No Automated E2E Tests**: All browser integration testing is manual. Risk of regressions during refactoring.
-- ⚠️ **Legacy Files Present**: Firebase config files (`firebase.json`, `firestore.rules`, `functions/`) still exist but are dormant. Can be confusing.
 
 **Medium Priority:**
 - Single default user (`uid: 'default'`) limits multi-user scenarios. Need authentication for production.
