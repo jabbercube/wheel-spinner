@@ -8,8 +8,8 @@
     "buefy": "^0.8.20",
     "canvas-confetti": "^1.2.0",
     "circletype": "^2.3.0",
-    "core-js": "^3.20.2",
     "better-sqlite3": "^11.0.0",
+    "core-js": "^3.20.2",
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "howler": "^2.2.0",
@@ -20,7 +20,6 @@
     "vue-mq": "^1.0.1",
     "vue-router": "^3.5.2",
     "vuex": "^3.5.1",
-    "whatwg-fetch": "^3.4.1",
     "workbox-webpack-plugin": "^6.3.0"
   },
   "devDependencies": {
