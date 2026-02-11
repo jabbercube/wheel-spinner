@@ -1,0 +1,26 @@
+# Build output
+dist/
+build/Release/
+
+# Dependencies
+node_modules/
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Logs
+*.log
+
+# Environment files
+*.env
+
+# Database
+wheelspinner.db*
+
+# Webpack configs (too complex for linting)
+build/*.config.js
+webpack.config.js
+
+# Third-party vendored code
+static/third_party/
