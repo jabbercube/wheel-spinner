@@ -134,18 +134,18 @@ Conversations with an agent can include:
 
 ## Optimization Strategies
 Claude Code is much more token-intensive than regular chat.
-- It reads your entire codebase for context
+- It can read your entire codebase for context
 - Extended sessions, large/complex files, bigger projects, and parallel sessions all consume limits faster
 - Opus 4 consumes resources approximately 5× faster than Sonnet 4
 
 ### 1. Use the Right Model
 - Stick with Sonnet 4.5 for most tasks - it's much more efficient
 - Only switch to Opus for complex architectural decisions
-- Check which model you're using with /model command
+- Check which model you're using with `/model` command
 
 ### 2. Manage Your Context
-- Use /clear or /compact commands to reset or summarize conversation history
-- Create a concise CLAUDE.md file in your project root with essential context instead of letting Claude read everything
+- Use `/clear` or `/compact` commands to reset or summarize conversation history
+- Create a concise `CLAUDE.md` file in your project root with essential context instead of letting Claude read everything
 - Be selective about which files Claude analyzes
 
 ### 3. Optimize Your Prompts
@@ -154,7 +154,7 @@ Claude Code is much more token-intensive than regular chat.
 - Avoid broad requests like "analyze my entire codebase"
 
 ### 4. Monitor Your Usage
-- Use the /cost command in Claude Code to track token consumption in real-time
+- Use the `/cost` command in Claude Code to track token consumption in real-time
 - Check your usage regularly in Settings → Usage
 - Plan intensive coding sessions around your 5-hour reset cycles
 

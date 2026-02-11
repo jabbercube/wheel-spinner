@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Wheel of Names — an interactive spinning wheel web app. Vue.js 2 frontend with Firebase/GCP backend. Apache 2.0 licensed, Google-sponsored open source project.
+Wheel Spinner — an interactive spinning Wheel of Names web app. Vue.js 2 frontend with Firebase/GCP backend. Apache 2.0 licensed, Google-sponsored open source project.
 
 ## Build & Development Commands
 
