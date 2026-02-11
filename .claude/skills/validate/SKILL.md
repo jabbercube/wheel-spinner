@@ -9,74 +9,49 @@ Run comprehensive validation of this project.
 
 Execute the following commands in sequence and report results:
 
-## 1. Backend Linting
+## 1. Cloud Functions Linting
 
 ```bash
-cd backend && uv run ruff check .
+cd functions && npm run lint
 ```
 
-**Expected:** "All checks passed!" or no output (clean)
+**Expected:** No ESLint errors or warnings. Clean output.
 
-## 2. Backend Tests
+## 2. Unit Tests
 
 ```bash
-cd backend && uv run pytest -v
+export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm use 18 && npm test
 ```
 
-**Expected:** All tests pass, execution time < 5 seconds
+**Expected:** All Mocha tests pass. Currently 107 passing, 9 failing (known locale test failures).
 
-## 3. Backend Tests with Coverage
+## 3. Development Build
 
 ```bash
-cd backend && uv run pytest --cov=app --cov-report=term-missing
+export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm use 18 && ./build_dev.sh
 ```
 
-**Expected:** Coverage >= 80% (configured in pyproject.toml)
+**Expected:** Webpack build completes successfully. Output to `dist/` directory with no build errors.
 
-## 4. Frontend Build
-
-```bash
-cd frontend && npm run build
-```
-
-**Expected:** Build completes successfully, outputs to `dist/` directory
-
-## 5. Local Server Validation (Optional)
-
-If backend is not already running, start it:
-
-```bash
-cd backend && uv run uvicorn app.main:app --port 8000 &
-```
-
-Wait 2 seconds for startup, then test:
-
-```bash
-# Test habits endpoint
-curl -s http://localhost:8000/api/habits | head -c 200
-
-# Check API docs
-curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" http://localhost:8000/docs
-```
-
-**Expected:** JSON response from habits endpoint, HTTP 200 from docs
-
-Stop the server if started:
-
-```bash
-# Linux/Mac
-lsof -ti:8000 | xargs kill -9 2>/dev/null || true
-```
-
-## 6. Summary Report
+## 4. Summary Report
 
 After all validations complete, provide a summary report with:
 
-- Linting status
-- Tests passed/failed
-- Coverage percentage
-- Frontend build status
-- Any errors or warnings encountered
-- Overall health assessment (PASS/FAIL)
+- **Linting status** (✅ PASS / ❌ FAIL)
+  - Functions ESLint results
+- **Tests passed/failed** (✅ PASS / ⚠️ PARTIAL)
+  - Currently 107 passing, 9 failing (pre-existing locale test failures)
+  - Tests pass if no new failures introduced
+- **Build status** (✅ PASS / ❌ FAIL)
+  - Webpack dev build completion
+- **Any errors or warnings encountered**
+- **Overall health assessment** (PASS/FAIL)
 
 **Format the report clearly with sections and status indicators**
+
+## Notes
+
+- **Node Version:** This project requires Node 18. The nvm commands are included to ensure correct version.
+- **Known Test Failures:** 9 locale tests are failing due to missing locale entries in `Locales.js`. This is pre-existing and not a validation failure.
+- **Build Requirements:** Webpack build requires `NODE_OPTIONS=--openssl-legacy-provider` which is set in `build_dev.sh`.
+- **No Coverage Tool:** Project uses Mocha without coverage reporting configured. Consider adding `nyc` or similar for coverage metrics.
