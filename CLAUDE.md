@@ -4,14 +4,55 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Wheel Spinner — an interactive spinning Wheel of Names web app. Vue.js 2 frontend with Firebase/GCP backend. Apache 2.0 licensed, Google-sponsored open source project.
+Wheel Spinner — an interactive spinning Wheel of Names web app. Vue.js 2 frontend with Express + SQLite backend for local development. Apache 2.0 licensed, originally a Google-sponsored open source project.
+
+**Current State**: The project has been migrated from Firebase/GCP backend to Express + SQLite for local self-hosting. The original Firebase deployment served wheelofnames.com, but this codebase now runs entirely locally with no cloud dependencies.
+
+**Production URL (original)**: wheelofnames.com (Firebase deployment)
+**Local Development**: Express API server + SQLite database
+
+## Environment Requirements
+
+**Node Version**: 18+ (required for better-sqlite3 native module)
+
+**Important**: The user's default Node version is v8.0.0 (too old). Always activate Node 18 before running any commands:
+```bash
+nvm use 18
+```
+
+**Shell Setup** (zsh):
+```bash
+# If nvm commands fail, source nvm first:
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+nvm use 18
+```
+
+**Webpack Build Requirements**:
+- Webpack requires `NODE_OPTIONS=--openssl-legacy-provider` flag (Node 18 + OpenSSL 3.0 compatibility)
+- This flag is already set in `build_dev.sh`
+- The server (`node server.js`) does NOT need this flag, only webpack builds
+
+**Port Conflicts**:
+- Default port: 5000
+- macOS AirPlay Receiver may occupy port 5000
+- Workaround: `PORT=3000 node server.js`
 
 ## Build & Development Commands
 
+**Setup:**
+```bash
+nvm use 18                   # Activate Node 18
+npm install                  # Install frontend dependencies
+```
+
 **Local development:**
 ```bash
-./build_and_serve_local.sh   # Build dev + serve via Firebase emulator
+./build_and_serve_local.sh   # Build dev + start Express server
 ./build_dev.sh               # Build only (webpack dev config, output to dist/)
+node server.js               # Start server only (after build)
+npm run dev                  # Build + start (package.json script)
+PORT=3000 node server.js     # Use alternate port if 5000 conflicts
 ```
 
 **Test/Production builds:**
@@ -23,17 +64,14 @@ Wheel Spinner — an interactive spinning Wheel of Names web app. Vue.js 2 front
 **Run tests:**
 ```bash
 npm test                     # Mocha tests with Babel (test/*.js)
+                            # Current status: 116 tests passing, 0 failures
 ```
 
-**Cloud Functions linting:**
+**Legacy (unused):**
 ```bash
-cd functions && npm run lint  # ESLint for Cloud Functions
-```
-
-**Deploy:**
-```bash
-./deploy_test.sh             # firebase deploy --project=test
-./deploy_prod.sh             # firebase deploy --project=prod
+cd functions && npm run lint  # ESLint for Cloud Functions (functions/ kept for reference)
+./deploy_test.sh             # firebase deploy (no longer used)
+./deploy_prod.sh             # firebase deploy (no longer used)
 ```
 
 ## Architecture
@@ -48,20 +86,37 @@ cd functions && npm run lint  # ESLint for Cloud Functions
 
 ### State Management (`/static/store/`)
 - `wheelStore.js` — wheel configuration state (largest store)
-- `userStore.js` — authentication state
+- `userStore.js` — authentication state (now always logged in as "Local User" with uid='default')
 - `preferencesStore.js` — user preferences
 - `hardwareStore.js` — device capabilities
 
-### Firebase Integration
-- `static/Firebase.js` — Firebase init and auth
-- `static/Firestore.js` — Firestore CRUD operations
-- `static/ServerFunctions.js` — HTTP calls to Cloud Functions
+### API Layer (`/static/`)
+- `static/Firebase.js` — **Thin API shim** (no actual Firebase, calls `/api/` endpoints)
+- `static/ServerFunctions.js` — HTTP calls to Express API endpoints
+- **Deleted files**: `FirebaseAuth.js`, `Firestore.js` (removed in migration)
 
-### Backend (`/functions/`)
+### Backend (Current: Express + SQLite)
+- **Server**: `server.js` (Express 4.21.0) — 451 lines
+  - Serves static files from `dist/`
+  - REST API under `/api/*` prefix
+  - CORS enabled
+  - JSON body parser (2MB limit)
+  - SPA fallback routing (xxx-xxx pattern → shared-wheel.html)
+- **Database**: `db.js` (better-sqlite3 11.0.0) — 63 lines
+  - SQLite database at `wheelspinner.db` (auto-created on first run)
+  - WAL mode enabled
+  - 5 tables: wheels, shared_wheels, settings, admins, carousels
+- **Authentication**: Single default user (`uid: 'default'`), no auth middleware
+- **API Endpoints**: 30+ endpoints for wheels, sharing, admin, settings, review queue
+
+### Legacy Backend (Reference Only: `/functions/`)
+The `functions/` directory contains the original Firebase Cloud Functions backend. These files are kept for reference but are NOT used in the current Express implementation.
 - Firebase Cloud Functions (Node.js) in `functions/index.js`
-- Key services: `SharedWheelService.js` (wheel CRUD/sharing), `AccountService.js` (user management), `TwitterService.js`
-- Functions handle: wheel sharing (create/get/delete), content moderation, account lifecycle, cron cleanup jobs, translation, analytics (BigQuery), Firestore backups
+- Key services: `SharedWheelService.js`, `AccountService.js`, `TwitterService.js`
 - GCP services used: Firestore, BigQuery, Cloud Storage, Translate, AutoML
+
+### Legacy ML (Reference Only: `/ml`)
+- Planning to remove this and any references to it
 
 ### Build System (`/build/`)
 - Webpack 5 with Babel (targets IE11+)
@@ -71,8 +126,22 @@ cd functions && npm run lint  # ESLint for Cloud Functions
 - Output to `dist/` with content-based hashing
 - Workbox plugin generates service worker for PWA
 
-### Firestore Data Model
-- `shared-wheels` — published wheel configurations (indexed by readCount+created and uid+created)
+### SQLite Database Schema
+**Tables** (defined in `db.js`):
+- `wheels` — User-saved wheel configurations (uid, title, config JSON, timestamps, read_count)
+- `shared_wheels` — Publicly shared wheels (path as XXX-XXX, uid, config JSON, copyable, review_status, timestamps, read_count)
+- `settings` — Key-value config (e.g., DIRTY_WORDS list, EARNINGS_PER_REVIEW)
+- `admins` — Admin users with review statistics (uid, name, total_reviews, session_reviews, last_review)
+- `carousels` — Carousel configuration data (id, data JSON)
+
+**Data Format**:
+- Wheel configs stored as JSON strings
+- Dates stored as ISO strings (e.g., "2026-02-11T12:34:56.789Z")
+- Parsed by `firestoremilliseconds` filter in `static/filters.js`
+
+### Legacy: Firestore Data Model (Reference Only)
+The original Firebase backend used Firestore collections. This is kept for reference only:
+- `shared-wheels` collection indexed by readCount+created and uid+created
 - Account data isolated by UID/email
 - Admin access controlled by `admins` collection checked in `firestore.rules`
 
@@ -83,7 +152,70 @@ cd functions && npm run lint  # ESLint for Cloud Functions
 
 ## Key Files
 
-- `firebase.json` — hosting config, rewrites, cache headers, Firestore rules reference
-- `firestore.rules` — security rules (auth isolation, admin checks)
-- `static/WheelConfig.js` — wheel configuration/validation model
-- `static/Util.js` — shared utilities (text sanitization, array helpers)
+**Current Backend:**
+- `server.js` — Express API server (451 lines, 30+ endpoints)
+- `db.js` — SQLite database initialization and schema (63 lines)
+- `wheelspinner.db` — SQLite database file (auto-created, gitignored)
+
+**Frontend Core:**
+- `static/index.js` — Vue app entry point
+- `static/WheelConfig.js` — Wheel configuration/validation model (~30 properties, backward compatibility)
+- `static/Wheel.js` — Canvas rendering engine (700x700px)
+- `static/Util.js` — Shared utilities (text sanitization, array helpers)
+- `static/Firebase.js` — Thin API shim (calls `/api/` endpoints)
+- `static/ServerFunctions.js` — HTTP wrapper for API calls
+
+**Build & Config:**
+- `package.json` — Dependencies and scripts
+- `babel.config.js` — Babel preset for IE11+ support
+- `build/base.config.js` — Shared Webpack config
+- `build/dev.env` — Development environment variables (gitignored)
+
+**Tests:**
+- `test/test-WheelConfig.js` — 7 tests
+- `test/test-Util.js` — 39 tests
+- `test/test-Locales.js` — 25 tests
+- `test/test-Filters.js` — 11 tests
+- `test/test-CircularArray.js` — 11 tests
+- `test/test-CircularCounter.js` — 2 tests
+- **Total**: 116 tests, all passing
+
+**Legacy (Reference Only):**
+- `firebase.json` — Original hosting config (dormant)
+- `firestore.rules` — Original security rules (dormant)
+- `functions/` — Original Cloud Functions backend (kept for reference, not used)
+
+## Important Notes
+
+### Testing
+- **Run tests**: `npm test` (requires Node 18)
+- **Test baseline**: All 116 tests should pass before making changes
+- **Locale tests**: Only use registered locales from `static/Locales.js` (de, en-PI, en, fr, sv)
+- **No E2E tests**: Browser integration testing is manual only
+
+### Known Issues & Technical Debt
+
+**High Priority:**
+- ⚠️ **Vue 2 EOL**: Framework reached end-of-life Dec 31, 2023 (no security patches). Migration to Vue 3 should be planned.
+- ⚠️ **No Automated E2E Tests**: All browser integration testing is manual. Risk of regressions during refactoring.
+- ⚠️ **Legacy Files Present**: Firebase config files (`firebase.json`, `firestore.rules`, `functions/`) still exist but are dormant. Can be confusing.
+
+**Medium Priority:**
+- Single default user (`uid: 'default'`) limits multi-user scenarios. Need authentication for production.
+- Google Sheets and Twitter integrations disabled (require OAuth/API keys).
+- IE11 support maintained (polyfills add bundle size for declining browser share).
+
+**Low Priority:**
+- Buefy 0.8 is Vue 2-only (migration blocker for Vue 3).
+- Some dependencies on older versions.
+
+### Disabled Features
+- **Google Sheets import**: `logInToSheets()` throws "not available" error (requires OAuth)
+- **Twitter integration**: `fetchSocialMediaUsers()` returns empty array (requires Twitter API keys)
+- **Account delete/convert**: Stubbed as no-ops (no authentication in current version)
+
+### Data Format Notes
+- Dates stored as ISO strings in SQLite, not Firestore's `{_seconds: epoch}` format
+- `firestoremilliseconds` filter in `static/filters.js` handles ISO date parsing
+- Wheel configs stored as JSON strings in database
+- Size limit: `isTooBigForDatabase()` checks <990KB for backward compatibility
