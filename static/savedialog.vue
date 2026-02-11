@@ -15,27 +15,6 @@ limitations under the License.
 -->
 <template>
   <div>
-    <b-modal :active.sync="displayLoginDialog" :width="640" scroll="keep">
-      <div class="modal-card" style="width: auto">
-        <header class="modal-card-head">
-          <p class="modal-card-title">
-            <i class="fa fa-save"></i>&nbsp;{{ $t('savedialog.Save wheel') }}
-          </p>
-        </header>
-        <section class="modal-card-body can-go-dark">
-          <p>
-            {{ $t('savedialog.To save wheels') }}
-          </p>
-          <div id="auth-container"></div>
-        </section>
-        <footer class="modal-card-foot" style="justify-content:flex-end">
-          <b-button @click="enter_inactive()">
-            {{ $t('common.Cancel') }}
-          </b-button>
-        </footer>
-      </div>
-    </b-modal>
-
     <b-modal :active.sync="displaySaveDialog" :width="640" scroll="keep">
       <div class="modal-card" style="width: auto">
         <header class="modal-card-head">
@@ -105,14 +84,6 @@ limitations under the License.
       saveAsNameIsValid() {
         return this.saveAsName.length > 0;
       },
-      displayLoginDialog: {
-        get: function() {
-          return this.fsm=='userIsPickingLoginMethod';
-        },
-        set: function(newValue) {
-          if (newValue == false) this.fsm = 'inactive';
-        }
-      },
       displaySaveDialog: {
         get: function() {
           return this.fsm=='userIsEnteringName';
@@ -144,13 +115,8 @@ limitations under the License.
         this.fsm = 'loadingLibraries';
         try {
           this.$emit('start-wait-animation');
-          const userIsLoggedIn = await this.$store.dispatch('userIsLoggedIn');
-          if (userIsLoggedIn) {
-            this.enter_loadingWheels();
-          }
-          else {
-            this.enter_userIsPickingLoginMethod();
-          }
+          await this.$store.dispatch('userIsLoggedIn');
+          this.enter_loadingWheels();
         }
         catch(ex) {
           this.enter_authError(ex);
@@ -161,22 +127,6 @@ limitations under the License.
       },
       enter_inactive() {
         this.fsm = 'inactive';
-      },
-      async enter_userIsPickingLoginMethod() {
-        this.fsm = 'userIsPickingLoginMethod';
-        this.$nextTick(async function() {
-          try {
-            Util.displayWindowsRtWarning();
-            Util.trackEvent('Wheel', `LoginForSaveAttempt`, '');
-            await this.$store.dispatch('loginWithUi', 'auth-container');
-            Util.trackEvent('Wheel', `LoginForSaveSuccess`, '');
-            this.enter_loadingWheels();
-          }
-          catch (ex) {
-            Util.trackEvent('Wheel', `LoginForSaveFailure`, ex.toString());
-            this.enter_authError(ex);
-          }
-        })
       },
       async enter_loadingWheels() {
         this.fsm = 'loadingWheels';

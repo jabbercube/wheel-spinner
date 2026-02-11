@@ -23,8 +23,6 @@ const translationsPage = () => import(/* webpackChunkName: "translationsPage" */
 const wheelReviewPage = () => import(/* webpackChunkName: "wheelReviewPage" */'./pages/wheelReviewPage.vue');
 const carouselPage = () => import(/* webpackChunkName: "carouselPage" */'./pages/carouselPage.vue');
 const notFoundPage = () => import(/* webpackChunkName: "notFoundPage" */'./pages/notFoundPage.vue');
-import * as Firebase from './Firebase.js';
-import * as ServerFunctions from './ServerFunctions.js';
 
 Vue.use(VueRouter);
 
@@ -104,22 +102,8 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async(to, from, next) => {
-  const adminOnly = to.matched[0].meta.adminOnly;
-  if (adminOnly) {
-    await Firebase.loadLibraries();
-    const idToken = await Firebase.getUserIdToken();
-    const userIsAdmin = await ServerFunctions.userIsAdmin(idToken);
-    if (userIsAdmin) {
-      next();
-    }
-    else {
-      alert('Please log in as an admin user.');
-      next(false);
-    }
-  }
-  else {
-    next();
-  }
+  // All users are admin in this iteration (no auth)
+  next();
 });
 
 router.afterEach((to, from) => {

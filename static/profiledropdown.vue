@@ -26,14 +26,8 @@ limitations under the License.
     <b-dropdown-item disabled aria-role="listitem">
       {{ $t('profiledropdown.Signed in as', {name: $store.getters.userDisplayName}) }}
     </b-dropdown-item>
-    <b-dropdown-item @click="logOut()" aria-role="listitem">
-      {{ $t('profiledropdown.Sign out') }}
-    </b-dropdown-item>
     <b-dropdown-item @click="$router.push('/export')" aria-role="listitem">
       {{ $t('profiledropdown.Export my data') }}
-    </b-dropdown-item>
-    <b-dropdown-item @click="confirmAndDelete()" aria-role="listitem">
-      {{ $t('profiledropdown.Delete my account') }}
     </b-dropdown-item>
   </b-dropdown>
 </template>
@@ -41,30 +35,6 @@ limitations under the License.
 <script>
   export default {
     methods: {
-      logOut() {
-        this.$store.dispatch('logOut');
-        this.$emit('log-out');
-      },
-      confirmAndDelete() {
-        this.$buefy.dialog.confirm({
-          title: this.$t('profiledropdown.Delete account'),
-          message: this.$t('profiledropdown.Are you sure you want to delete your account'),
-          cancelText: this.$t('common.Cancel'),
-          confirmText: this.$t('common.Delete'),
-          type: 'is-danger',
-          hasIcon: true,
-          onConfirm: () => this.deleteAccount()
-        })
-      },
-      async deleteAccount() {
-        this.$emit('start-wait-animation');
-        await this.$store.dispatch('deleteAccount');
-        this.$store.dispatch('resetWheel');
-        const msg = this.$t('profiledropdown.Your account and your saved wheels have been deleted');
-        this.$emit('show-snackbar-message', msg);
-        this.$emit('stop-wait-animation');
-        this.$emit('log-out');
-      }
     }
   }
 </script>
