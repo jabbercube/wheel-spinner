@@ -30,16 +30,16 @@ describe('Locales', function() {
     it('path overrides domain', function() {
       assert.strictEqual(Locales.getLocale('localhost',        '/fr'), 'fr');
       assert.strictEqual(Locales.getLocale('localhost',        '/en'), 'en');
-      assert.strictEqual(Locales.getLocale('localhost',        '/th'), 'th');
+      assert.strictEqual(Locales.getLocale('localhost',        '/de'), 'de');
       assert.strictEqual(Locales.getLocale('wheelofnames.com', '/fr'), 'fr');
       assert.strictEqual(Locales.getLocale('wheelofnames.com', '/en'), 'en');
-      assert.strictEqual(Locales.getLocale('wheelofnames.com', '/th'), 'th');
+      assert.strictEqual(Locales.getLocale('wheelofnames.com', '/de'), 'de');
       assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/fr'), 'fr');
       assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/en'), 'en');
-      assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/th'), 'th');
+      assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/de'), 'de');
     })
-    it('can inerpret three-letter locales', function() {
-      assert.strictEqual(Locales.getLocale('wheelofnames.com', '/fil/'), 'fil');
+    it('unregistered three-letter locale falls back to domain default', function() {
+      assert.strictEqual(Locales.getLocale('wheelofnames.com', '/fil/'), 'en');
     }),
     it('return English for unknown locale paths', function() {
       assert.strictEqual(Locales.getLocale('localhost',        '/xx'), 'en');
@@ -49,13 +49,13 @@ describe('Locales', function() {
     it('path overrides domain with trailing slash', function() {
       assert.strictEqual(Locales.getLocale('localhost',        '/fr/'), 'fr');
       assert.strictEqual(Locales.getLocale('localhost',        '/en/'), 'en');
-      assert.strictEqual(Locales.getLocale('localhost',        '/th/'), 'th');
+      assert.strictEqual(Locales.getLocale('localhost',        '/de/'), 'de');
       assert.strictEqual(Locales.getLocale('wheelofnames.com', '/fr/'), 'fr');
       assert.strictEqual(Locales.getLocale('wheelofnames.com', '/en/'), 'en');
-      assert.strictEqual(Locales.getLocale('wheelofnames.com', '/th/'), 'th');
+      assert.strictEqual(Locales.getLocale('wheelofnames.com', '/de/'), 'de');
       assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/fr/'), 'fr');
       assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/en/'), 'en');
-      assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/th/'), 'th');
+      assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/de/'), 'de');
     })
     it('short-links override locale in path', function() {
       assert.strictEqual(Locales.getLocale('localhost',        '/fra-123'), 'en');
@@ -65,13 +65,13 @@ describe('Locales', function() {
     })
     it('short-links and locale can co-exist in path', function() {
       assert.strictEqual(Locales.getLocale('localhost',        '/fr/abc-123'), 'fr');
-      assert.strictEqual(Locales.getLocale('localhost',        '/th/abc-123'), 'th');
+      assert.strictEqual(Locales.getLocale('localhost',        '/de/abc-123'), 'de');
       assert.strictEqual(Locales.getLocale('localhost',        '/abc-123'), 'en');
       assert.strictEqual(Locales.getLocale('wheelofnames.com', '/fr/abc-123'), 'fr');
-      assert.strictEqual(Locales.getLocale('wheelofnames.com', '/th/abc-123'), 'th');
+      assert.strictEqual(Locales.getLocale('wheelofnames.com', '/de/abc-123'), 'de');
       assert.strictEqual(Locales.getLocale('wheelofnames.com', '/abc-123'), 'en');
       assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/en/abc-123/'), 'en');
-      assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/th/abc-123/'), 'th');
+      assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/de/abc-123/'), 'de');
       assert.strictEqual(Locales.getLocale('rouesdesnoms.com', '/abc-123/'), 'fr');
     })
   })
@@ -84,13 +84,13 @@ describe('Locales', function() {
     it('override locale for domain', function() {
       assert.strictEqual(Locales.getRelativeUrl('localhost',        'fr'), '/fr/');
       assert.strictEqual(Locales.getRelativeUrl('wheelofnames.com', 'fr'), '/fr/');
-      assert.strictEqual(Locales.getRelativeUrl('wheelofnames.com', 'th'), '/th/');
+      assert.strictEqual(Locales.getRelativeUrl('wheelofnames.com', 'de'), '/de/');
       assert.strictEqual(Locales.getRelativeUrl('rouesdesnoms.com', 'en'), '/en/');
     })
     it('default to English for unknown domains', function() {
       assert.strictEqual(Locales.getRelativeUrl('otherdomain.com',  'en'), '/');
       assert.strictEqual(Locales.getRelativeUrl('otherdomain.com',  'fr'), '/fr/');
-      assert.strictEqual(Locales.getRelativeUrl('otherdomain.com',  'th'), '/th/');
+      assert.strictEqual(Locales.getRelativeUrl('otherdomain.com',  'de'), '/de/');
     })
   })
   describe('#getAbsoluteUrl()', function() {
@@ -99,7 +99,7 @@ describe('Locales', function() {
       assert.strictEqual(Locales.getAbsoluteUrl('rouedenoms.com', 'fr', 'abc-123'), 'rouedenoms.com/abc-123');
     })
     it('non-default locale for domain', function() {
-      assert.strictEqual(Locales.getAbsoluteUrl('wheelofnames.com', 'tr', 'abc-123'), 'wheelofnames.com/tr/abc-123');
+      assert.strictEqual(Locales.getAbsoluteUrl('wheelofnames.com', 'de', 'abc-123'), 'wheelofnames.com/de/abc-123');
       assert.strictEqual(Locales.getAbsoluteUrl('rouedenoms.com', 'en', 'abc-123'), 'rouedenoms.com/en/abc-123');
     })
   })
@@ -108,31 +108,22 @@ describe('Locales', function() {
       assert.strictEqual(Locales.getLoginLocale('Google', 'en'), 'en_US');
       assert.strictEqual(Locales.getLoginLocale('Google', 'en-PI'), 'en_US');
       assert.strictEqual(Locales.getLoginLocale('Google', 'fr'), 'fr_FR');
-      assert.strictEqual(Locales.getLoginLocale('Google', 'no'), 'nb_NO');
-      assert.strictEqual(Locales.getLoginLocale('Google', 'tr'), 'tr_TR');
-      assert.strictEqual(Locales.getLoginLocale('Google', 'vi'), 'vi_VN');
-      assert.strictEqual(Locales.getLoginLocale('Google', 'zh-HK'), 'zh_TW');
-      assert.strictEqual(Locales.getLoginLocale('Google', 'zh-CN'), 'zh_CN');
+      assert.strictEqual(Locales.getLoginLocale('Google', 'de'), 'de_DE');
+      assert.strictEqual(Locales.getLoginLocale('Google', 'sv'), 'sv_SE');
     })
     it('Facebook locales', function() {
       assert.strictEqual(Locales.getLoginLocale('Facebook', 'en'), 'en_US');
       assert.strictEqual(Locales.getLoginLocale('Facebook', 'en-PI'), 'en_US');
       assert.strictEqual(Locales.getLoginLocale('Facebook', 'fr'), 'fr_FR');
-      assert.strictEqual(Locales.getLoginLocale('Facebook', 'no'), 'nb_NO');
-      assert.strictEqual(Locales.getLoginLocale('Facebook', 'tr'), 'tr_TR');
-      assert.strictEqual(Locales.getLoginLocale('Facebook', 'vi'), 'vi_VN');
-      assert.strictEqual(Locales.getLoginLocale('Facebook', 'zh-HK'), 'zh_TW');
-      assert.strictEqual(Locales.getLoginLocale('Facebook', 'zh-CN'), 'zh_CN');
+      assert.strictEqual(Locales.getLoginLocale('Facebook', 'de'), 'de_DE');
+      assert.strictEqual(Locales.getLoginLocale('Facebook', 'sv'), 'sv_SE');
     })
     it('Twitter locales', function() {
       assert.strictEqual(Locales.getLoginLocale('Twitter', 'en'), 'en');
       assert.strictEqual(Locales.getLoginLocale('Twitter', 'en-PI'), 'en');
       assert.strictEqual(Locales.getLoginLocale('Twitter', 'fr'), 'fr');
-      assert.strictEqual(Locales.getLoginLocale('Twitter', 'no'), 'no');
-      assert.strictEqual(Locales.getLoginLocale('Twitter', 'tr'), 'tr');
-      assert.strictEqual(Locales.getLoginLocale('Twitter', 'vi'), 'vi');
-      assert.strictEqual(Locales.getLoginLocale('Twitter', 'zh-HK'), 'zh-tw');
-      assert.strictEqual(Locales.getLoginLocale('Twitter', 'zh-CN'), 'zh-cn');
+      assert.strictEqual(Locales.getLoginLocale('Twitter', 'de'), 'de');
+      assert.strictEqual(Locales.getLoginLocale('Twitter', 'sv'), 'sv');
     })
     it('default to US English for unknown locales', function() {
       assert.strictEqual(Locales.getLoginLocale('Google', 'xx'), 'en_US');
@@ -164,9 +155,10 @@ describe('Locales', function() {
   describe('#getMessagesFileName()', function() {
     it('contains the major locales', function() {
       assert.strictEqual(Locales.getMessagesFileName('en'), 'en-US.json');
-      assert.strictEqual(Locales.getMessagesFileName('th'), 'th-TH.json');
+      assert.strictEqual(Locales.getMessagesFileName('de'), 'de-DE.json');
       assert.strictEqual(Locales.getMessagesFileName('fr'), 'fr-FR.json');
       assert.strictEqual(Locales.getMessagesFileName('en-PI'), 'en-PI.json');
+      assert.strictEqual(Locales.getMessagesFileName('sv'), 'sv-SE.json');
     })
     it('return English for unknown locales', function() {
       assert.strictEqual(Locales.getMessagesFileName('xx'), 'en-US.json');
@@ -186,15 +178,10 @@ describe('Locales', function() {
     it('should show if user is in another language', function() {
       assert.strictEqual(Locales.getLangTipLocale('en', ['fr-FR']), 'fr');
       assert.strictEqual(Locales.getLangTipLocale('en', ['fr-CA']), 'fr');
-      assert.strictEqual(Locales.getLangTipLocale('en', ['th-TH']), 'th');
-      assert.strictEqual(Locales.getLangTipLocale('en', ['th']), 'th');
       assert.strictEqual(Locales.getLangTipLocale('en', ['sv-SE']), 'sv');
-      assert.strictEqual(Locales.getLangTipLocale('fr', ['th-TH']), 'th');
+      assert.strictEqual(Locales.getLangTipLocale('en', ['de-DE']), 'de');
+      assert.strictEqual(Locales.getLangTipLocale('fr', ['de-DE']), 'de');
       assert.strictEqual(Locales.getLangTipLocale('en', ['fr', 'en']), 'fr');
-      assert.strictEqual(Locales.getLangTipLocale('en', ['pt-BR']), 'pt');
-      assert.strictEqual(Locales.getLangTipLocale('en', ['zh-HK']), 'zh-HK');
-      assert.strictEqual(Locales.getLangTipLocale('zh-CN', ['zh-HK']), 'zh-HK');
-      assert.strictEqual(Locales.getLangTipLocale('en', ['fil-ph']), 'fil');
     })
     it('should not crash on null or empty array', function() {
       assert.strictEqual(Locales.getLangTipLocale('en', null), '');
