@@ -18,8 +18,7 @@ import "regenerator-runtime/runtime";
 
 
 export function browserCanHandlePersistance(userAgent) {
-  // Exclude iOS 12.2 due to a bug in that OS:
-  // https://github.com/firebase/firebase-js-sdk/issues/1670
+  // Exclude iOS 12.2 due to a bug in that OS version's handling of persistence
   return (userAgent.indexOf('OS 12_2 like Mac OS X') == -1);
 }
 

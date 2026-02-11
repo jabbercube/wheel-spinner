@@ -6,7 +6,7 @@ Wheel of Names is an interactive spinning wheel web application that enables use
 
 The core value proposition is simplicity combined with deep customization: anyone can create and spin a wheel in seconds, while power users can customize colors, images, sounds, spin behavior, and sharing options. The product is free, open-source (Apache 2.0), and runs as a Progressive Web App with offline support.
 
-The current production deployment serves users at wheelofnames.com with a Firebase/GCP backend for authentication, wheel persistence, sharing, and analytics.
+This codebase has been migrated to Express + SQLite for local self-hosting. The original production deployment at wheelofnames.com used Firebase/GCP backend.
 
 ## 2. Mission
 
@@ -234,12 +234,8 @@ wheel-spinner/
 │   │   ├── sv-SE.json
 │   │   └── en-PI.json         # Pirate English
 │   └── [60+ Vue components]   # UI components (dialogs, pickers, etc.)
-├── functions/                 # Firebase Cloud Functions (Node.js)
-│   ├── index.js               # Function exports
-│   ├── SharedWheelService.js  # Wheel CRUD/sharing logic
-│   ├── AccountService.js      # User account management
-│   ├── TwitterService.js      # Twitter API integration
-│   └── [15+ function modules] # Individual cloud functions
+├── server.js                  # Express API server
+├── db.js                      # SQLite database initialization
 ├── build/                     # Webpack configs
 │   ├── base.config.js         # Shared webpack config
 │   ├── dev.config.js          # Development build
@@ -252,10 +248,7 @@ wheel-spinner/
 │   ├── test-Filters.js
 │   ├── test-CircularArray.js
 │   └── test-CircularCounter.js
-├── ml/                        # Machine learning (AutoML content moderation)
-├── firebase.json              # Firebase hosting/Firestore config
-├── firestore.rules            # Firestore security rules
-└── firestore.indexes.json     # Firestore index definitions
+└── wheelspinner.db            # SQLite database (auto-created)
 ```
 
 ### Key Design Patterns
@@ -263,11 +256,10 @@ wheel-spinner/
 - **Component-based UI** — Vue.js single-file components (`.vue`) with template/script/style
 - **Centralized state** — Vuex store with 4 modules (wheel, user, preferences, hardware)
 - **Immutable state updates** — Wheel config cloned before mutation (`wheelConfig.clone()`)
-- **Local-first persistence** — Wheel config saved to `localStorage` on every change; Firebase is opt-in
+- **Local-first persistence** — Wheel config saved to `localStorage` on every change
 - **Lazy-loaded routes** — All pages except the main wheel page are code-split via dynamic `import()`
 - **Canvas rendering** — Wheel drawn directly on `<canvas>` with `requestAnimationFrame` loop
-- **Serverless backend** — All server logic as individual Firebase Cloud Functions (one file per function)
-- **Anonymous-first auth** — Users start anonymous; account conversion preserves data on sign-in
+- **REST API backend** — Express server with SQLite database for wheel storage and sharing
 
 ## 7. Features Detail
 
@@ -289,14 +281,14 @@ Core configuration object with ~30 properties:
 - Behavior flags: `allowDuplicates`, `slowSpin`, `showTitle`, `animateWinner`, `launchConfetti`, `autoRemoveWinner`, `displayWinnerDialog`, `displayRemoveButton`, `displayHideButton`
 - `spinTime` (1–60s), `maxNames` (4–1000), `hubSize` ("S"/"M"/"L")
 - Backward compatibility: `convertOldData()` migrates legacy `names[]` format and boolean sound flags
-- Size limit: `isTooBigForDatabase()` checks <990KB for Firestore document limits
+- Size limit: `isTooBigForDatabase()` checks <990KB for database storage
 
 ### Sharing System
-- **Create:** Authenticated user creates shared wheel → Cloud Function generates `XXX-XXX` path
+- **Create:** User creates shared wheel → API generates `XXX-XXX` path
 - **View:** Anyone with the link sees a read-only spin view (no toolbar, limited UI)
 - **Copy:** If wheel is marked copyable, visitors can clone it to their own workspace
 - **Moderation:** Shared wheels enter a review queue; admins approve/reject via `wheelReviewPage`
-- **Lifecycle:** Unused wheels deleted after 14 days; accessed wheels deleted after 6 months of inactivity
+- **Storage:** Shared wheels stored in SQLite database
 
 ### Options Dialog
 Tabbed modal with 4 tabs:
@@ -324,16 +316,11 @@ Tabbed modal with 4 tabs:
 | whatwg-fetch | 3.4.x | Fetch polyfill |
 
 ### Backend
-| Technology | Purpose |
-|---|---|
-| Firebase Auth | Authentication (Google, Facebook, Twitter, Anonymous) |
-| Cloud Firestore | Document database for accounts, wheels, settings |
-| Firebase Cloud Functions | Serverless Node.js backend |
-| Firebase Hosting | Static asset serving with CDN |
-| Google BigQuery | Analytics and spin statistics |
-| Google Cloud Storage | Firestore backups |
-| Google Cloud Translate | Translation assistance |
-| Google AutoML | Content moderation (ML-based) |
+| Technology | Version | Purpose |
+|---|---|---|
+| Express | 4.21.0 | REST API server |
+| better-sqlite3 | 11.0.0 | SQLite database driver |
+| SQLite | 3.x | Local database for wheels, settings, admins |
 
 ### Build & Dev
 | Technology | Version | Purpose |
@@ -343,7 +330,6 @@ Tabbed modal with 4 tabs:
 | Mocha | 8.x | Test runner |
 | Workbox | 6.3.x | Service worker generation (PWA) |
 | dotenv-webpack | 2.x | Environment variable injection |
-| Firebase CLI | Latest | Local emulation and deployment |
 
 ### Entry Points
 Webpack produces 3 entry bundles:
@@ -379,94 +365,40 @@ Three environment configs: `dev.env`, `test.env`, `prod.env`
 ### Content Security
 - Shared wheel content moderation via review queue
 - Dirty words detection and filtering
-- AutoML-based content classification
 - Wheel size limit prevents abuse (990KB max)
-
-### Caching Strategy (firebase.json)
-| Asset Type | Cache Duration |
-|---|---|
-| HTML files | No cache (`max-age=0`) |
-| JS/CSS bundles | 1 hour (`max-age=3600`) |
-| Images, fonts, audio | 1 week (`max-age=604800`) |
 
 ## 10. API Specification
 
-### Cloud Functions (HTTP Endpoints)
+### Express REST API
 
-All endpoints are prefixed with `FUNCTION_PREFIX` (e.g., `https://us-central1-project.cloudfunctions.net`).
+All API endpoints are prefixed with `/api/` and served by the Express server on port 5000 (configurable).
 
-#### Wheel Sharing
-| Function | Method | Auth | Description |
-|---|---|---|---|
-| `createSharedWheel2` | POST | ID Token | Create a shared wheel (v2) |
-| `createSharedWheel3` | POST | ID Token | Create a shared wheel (v3, with copyable flag) |
-| `getSharedWheel2` | GET | None | Retrieve a shared wheel by path |
-| `getSharedWheels` | GET | ID Token | List user's shared wheels |
-| `deleteSharedWheel` | DELETE | ID Token | Delete a shared wheel |
-| `logSharedWheelRead` | POST | None | Log a view/read of a shared wheel |
-| `processSharedWheelReads` | — | Internal | Aggregate shared wheel read counts |
+#### Wheel Storage & Sharing
+- `POST /api/shared-wheels` - Create a shared wheel
+- `GET /api/shared-wheels/:path` - Retrieve a shared wheel by XXX-XXX path
+- `GET /api/shared-wheels` - List user's shared wheels
+- `DELETE /api/shared-wheels/:path` - Delete a shared wheel
+- `POST /api/shared-wheels/:path/read` - Log a wheel view
 
-#### Account Management
-| Function | Method | Auth | Description |
-|---|---|---|---|
-| `convertAccount` | POST | ID Token | Convert anonymous account to authenticated |
-| `deleteAccount` | POST | ID Token | Delete user account and all data |
-| `deleteInactiveAccounts` | GET | Cron | Delete accounts inactive >6 months |
+#### Admin
+- `GET /api/admin/wheels` - Get wheels in review queue
+- `POST /api/admin/wheels/:path/approve` - Approve a shared wheel
+- `POST /api/admin/wheels/:path/reject` - Reject a shared wheel
 
-#### Data Lifecycle (Cron)
-| Function | Method | Auth | Description |
-|---|---|---|---|
-| `deleteUnusedSharedWheels` | GET | Cron | Delete shared wheels never accessed (14 days) |
-| `deleteUsedSharedWheels` | GET | Cron | Delete shared wheels inactive >6 months |
-| `deleteOldWheelsFromReviewQueue` | GET | Cron | Clean up old review queue items |
+#### Settings
+- `GET /api/settings/:key` - Get a setting value
+- `POST /api/settings` - Update settings
 
-#### Admin & Analytics
-| Function | Method | Auth | Description |
-|---|---|---|---|
-| `userIsAdmin` | GET | ID Token | Check if user is an admin |
-| `getNumberOfWheelsInReviewQueue` | GET | ID Token | Review queue count |
-| `getCarousels` | GET | ID Token | Get carousel configurations |
-| `getSpinStats` | GET | ID Token | Get spin statistics |
-| `loadBigQuery` | — | Internal | Push analytics to BigQuery |
-| `backupFirestore` | — | Internal | Backup Firestore to Cloud Storage |
+### SQLite Database Schema
 
-#### Integrations
-| Function | Method | Auth | Description |
-|---|---|---|---|
-| `getTwitterUserNames2` | GET | ID Token | Fetch Twitter users by search term |
-| `translate` | POST | ID Token | Translate text via Cloud Translate |
+**Tables:**
+- `wheels` - User-saved wheel configurations (uid, title, config JSON, timestamps, read_count)
+- `shared_wheels` - Publicly shared wheels (path as XXX-XXX, uid, config JSON, copyable, review_status, timestamps, read_count)
+- `settings` - Key-value config (e.g., DIRTY_WORDS list)
+- `admins` - Admin users with review statistics
+- `carousels` - Carousel configuration data
 
-### Firestore Data Model
-
-```
-accounts/
-  {uid or email}/
-    wheels/
-      {wheelTitle}/    → WheelConfig document
-
-shared-wheels/
-  {XXX-XXX}/           → WheelConfig + metadata (readCount, created, uid)
-
-shared-wheels-review-queue/
-  {id}/                → Wheels pending moderation
-
-shared-wheels-rejected/
-  {id}/                → Rejected wheels
-
-admins/
-  {uid}/               → Admin user flag
-
-settings/
-  TWITTER_APP_KEY/     → {value: "..."}
-  TWITTER_APP_SECRET/  → {value: "..."}
-
-carousels/
-  {id}/                → Carousel configuration
-```
-
-**Indexes** (firestore.indexes.json):
-- `shared-wheels`: composite index on `readCount` (ASC) + `created` (ASC) for cleanup queries
-- `shared-wheels`: composite index on `uid` (ASC) + `created` (DESC) for user's shared wheel listing
+**Historical Note:** The original production deployment (wheelofnames.com) used Firebase/GCP backend with Cloud Functions and Firestore. See `.agents/implementation-reports/replace-firebase-with-express-sqlite.md` for details on the original architecture and migration to Express + SQLite.
 
 ## 11. Success Criteria
 
@@ -585,23 +517,19 @@ carousels/
 ### Key Dependencies
 - Repository: `github.com/momander/wheel-spinner`
 - License: Apache 2.0
-- Production URL: wheelofnames.com
-- Firebase Console: console.firebase.google.com
-- GCP Console: console.cloud.google.com
+- Original production URL: wheelofnames.com (Firebase deployment)
 
 ### Build Commands Reference
 | Command | Purpose |
 |---|---|
-| `npm install` | Install frontend dependencies |
-| `cd functions && npm install` | Install Cloud Functions dependencies |
-| `./build_and_serve_local.sh` | Dev build + Firebase emulator |
+| `npm install` | Install dependencies |
+| `./build_and_serve_local.sh` | Dev build + start Express server |
 | `./build_dev.sh` | Development build (output to dist/) |
 | `./build_test.sh` | Test environment build |
 | `./build_prod.sh` | Production build |
-| `npm test` | Run Mocha unit tests |
-| `cd functions && npm run lint` | Lint Cloud Functions |
-| `./deploy_test.sh` | Deploy to test environment |
-| `./deploy_prod.sh` | Deploy to production |
+| `npm test` | Run Mocha unit tests (116 tests) |
+| `node server.js` | Start Express server (port 5000) |
+| `PORT=3000 node server.js` | Start server on alternate port |
 
 ### Component Inventory (60+ Vue Components)
 **Pages (8):** wheelPage, faqPage, exportPage, privacyPolicyPage, translationsPage, wheelReviewPage, carouselPage, notFoundPage
