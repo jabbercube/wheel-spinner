@@ -154,8 +154,8 @@ Claude Code is much more token-intensive than regular chat.
 - Avoid broad requests like "analyze my entire codebase"
 
 ### 4. Monitor Your Usage
-- Use the `/cost` command in Claude Code to track token consumption in real-time
-- Check your usage regularly in Settings → Usage
+- Use `/context` to track token consumption
+- Check your usage regularly with `/usage`
 - Plan intensive coding sessions around your 5-hour reset cycles
 
 ### 5. Consider Your Workflow
