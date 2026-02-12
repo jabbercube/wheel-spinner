@@ -12,6 +12,40 @@ Wheel Spinner - Interactive spinning wheel web application for random selection.
 4. Run `npm run start:dev`
 5. Open http://localhost:3000 (or `PORT=3001 node backend/server.js` if 3000 conflicts)
 
+## Quick Start (Docker)
+
+**No Node.js installation required!** Develop and run the app entirely in containers.
+
+**Development (with live reload):**
+```bash
+make dev              # or: docker-compose --profile dev up
+```
+- Source code mounted as volume for live editing
+- Database persisted in Docker volume
+- Access at http://localhost:3000
+
+**Production:**
+```bash
+make prod             # or: docker-compose --profile prod up -d
+```
+- Optimized production build
+- Runs as non-root user
+- Database persisted in Docker volume
+
+**Run tests in container:**
+```bash
+make test-run         # or: docker-compose --profile test run --rm wheel-spinner-test npm test
+```
+
+**Other useful commands:**
+```bash
+make shell            # Open shell in dev container
+make logs             # View container logs
+make down             # Stop all containers
+make clean            # Stop and remove volumes
+make help             # Show all available commands
+```
+
 ## Development Commands
 
 **Build:**
