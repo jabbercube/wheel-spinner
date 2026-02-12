@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 
 // Serve static files from dist/
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // --- Wheel CRUD (saved wheels for the default user) ---
 

@@ -582,7 +582,7 @@ node server.js
 - `firestore.indexes.json` — keep for reference
 - `.firebaserc` — keep for reference
 
-**NOTE**: Full cleanup of dormant Firebase files (functions/, ml/, firebase.json, firestore.rules, firestore.indexes.json, deploy scripts) was completed in follow-up feature `remove-firebase-legacy-files`. See `.agents/plans/features/remove-firebase-legacy-files.md` for details.
+**NOTE**: Full cleanup of dormant Firebase files (functions/, ml/, firebase.json, firestore.rules, firestore.indexes.json, deploy scripts) was completed in follow-up feature `remove-firebase-legacy-files`. See `.agents/plans/feature/remove-firebase-legacy-files.md` for details.
 
 **VALIDATE**: `./build_dev.sh && node server.js` — app runs correctly.
 

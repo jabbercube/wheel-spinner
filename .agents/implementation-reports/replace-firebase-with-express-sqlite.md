@@ -1,7 +1,7 @@
 # Implementation Report: Replace Firebase with Express + SQLite
 
 **Date**: 2026-02-11
-**Plan File**: `.agents/plans/features/replace-firebase-with-express-sqlite.md`
+**Plan File**: `.agents/plans/feature/replace-firebase-with-express-sqlite.md`
 **Branch**: `feature/replace-firebase-with-express-sqlite`
 **Commits**: fbef5b6, 33cb174, 20c9f79
 **Merged**: c3dc074

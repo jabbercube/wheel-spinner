@@ -31,12 +31,12 @@ nvm use 18
 **Webpack Build Requirements**:
 - Webpack requires `NODE_OPTIONS=--openssl-legacy-provider` flag (Node 18 + OpenSSL 3.0 compatibility)
 - This flag is already set in `build_dev.sh`
-- The server (`node server.js`) does NOT need this flag, only webpack builds
+- The server (`node backend/server.js`) does NOT need this flag, only webpack builds
 
 **Port Conflicts**:
 - Default port: 5000
 - macOS AirPlay Receiver may occupy port 5000
-- Workaround: `PORT=3000 node server.js`
+- Workaround: `PORT=3000 node backend/server.js`
 
 ## Build & Development Commands
 
@@ -50,9 +50,9 @@ npm install                  # Install frontend dependencies
 ```bash
 ./build_and_serve_local.sh   # Build dev + start Express server
 ./build_dev.sh               # Build only (webpack dev config, output to dist/)
-node server.js               # Start server only (after build)
+node backend/server.js       # Start server only (after build)
 npm run dev                  # Build + start (package.json script)
-PORT=3000 node server.js     # Use alternate port if 5000 conflicts
+PORT=3000 node backend/server.js     # Use alternate port if 5000 conflicts
 ```
 
 **Test/Production builds:**
@@ -89,14 +89,14 @@ npm test                     # Mocha tests with Babel (test/*.js)
 - **Deleted files**: `FirebaseAuth.js`, `Firestore.js` (removed in migration)
 
 ### Backend (Current: Express + SQLite)
-- **Server**: `server.js` (Express 4.21.0) — 451 lines
+- **Server**: `backend/server.js` (Express 4.21.0) — 451 lines
   - Serves static files from `dist/`
   - REST API under `/api/*` prefix
   - CORS enabled
   - JSON body parser (2MB limit)
   - SPA fallback routing (xxx-xxx pattern → shared-wheel.html)
-- **Database**: `db.js` (better-sqlite3 11.0.0) — 63 lines
-  - SQLite database at `wheelspinner.db` (auto-created on first run)
+- **Database**: `backend/db.js` (better-sqlite3 11.0.0) — 63 lines
+  - SQLite database at `backend/data/wheelspinner.db` (auto-created on first run)
   - WAL mode enabled
   - 5 tables: wheels, shared_wheels, settings, admins, carousels
 - **Authentication**: Single default user (`uid: 'default'`), no auth middleware
@@ -111,7 +111,7 @@ npm test                     # Mocha tests with Babel (test/*.js)
 - Workbox plugin generates service worker for PWA
 
 ### SQLite Database Schema
-**Tables** (defined in `db.js`):
+**Tables** (defined in `backend/db.js`):
 - `wheels` — User-saved wheel configurations (uid, title, config JSON, timestamps, read_count)
 - `shared_wheels` — Publicly shared wheels (path as XXX-XXX, uid, config JSON, copyable, review_status, timestamps, read_count)
 - `settings` — Key-value config (e.g., DIRTY_WORDS list, EARNINGS_PER_REVIEW)
@@ -131,9 +131,9 @@ npm test                     # Mocha tests with Babel (test/*.js)
 ## Key Files
 
 **Current Backend:**
-- `server.js` — Express API server (451 lines, 30+ endpoints)
-- `db.js` — SQLite database initialization and schema (63 lines)
-- `wheelspinner.db` — SQLite database file (auto-created, gitignored)
+- `backend/server.js` — Express API server (451 lines, 30+ endpoints)
+- `backend/db.js` — SQLite database initialization and schema (63 lines)
+- `backend/data/wheelspinner.db` — SQLite database file (auto-created, gitignored)
 
 **Frontend Core:**
 - `static/index.js` — Vue app entry point

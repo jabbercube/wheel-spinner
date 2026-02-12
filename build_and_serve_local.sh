@@ -14,4 +14,4 @@
 # limitations under the License.
 
 ./build_dev.sh
-node server.js
+node backend/server.js

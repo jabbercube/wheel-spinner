@@ -87,7 +87,7 @@ The solution preserves all useful architectural documentation by maintaining the
 - `README.md` (entire file) - 51 Firebase references, extensive setup instructions for Firebase/GCP
 - `CLAUDE.md` (lines 72-74, 112-186, 201) - References to legacy Firebase backend
 - `docs/PRD.md` (lines 237-256, 385-396, 589-602) - Firebase architecture documentation
-- `.agents/plans/features/replace-firebase-with-express-sqlite.md` (line 341) - Cleanup task marked incomplete
+- `.agents/plans/feature/replace-firebase-with-express-sqlite.md` (line 341) - Cleanup task marked incomplete
 - `package-lock.json` - Historical Firebase package references (regenerate via `npm install`)
 
 **Reference Documentation (Read for context):**
@@ -426,7 +426,7 @@ IMPORTANT: Execute every task in order, top to bottom. Each task is atomic and i
 - **VALIDATE**: `grep -c "Firebase Cloud Functions" docs/PRD.md`
 - **EXPECTED**: 0 (no mentions of Firebase Cloud Functions in active documentation)
 
-### Task 22: UPDATE .agents/plans/features/replace-firebase-with-express-sqlite.md
+### Task 22: UPDATE .agents/plans/feature/replace-firebase-with-express-sqlite.md
 
 - **IMPLEMENT**: Mark Task 12 (CLEANUP) as fully complete instead of partial
 - **CURRENT**: Line 341 shows "⚠️ PARTIAL" with note about Firebase config files kept
@@ -434,7 +434,7 @@ IMPORTANT: Execute every task in order, top to bottom. Each task is atomic and i
   ```markdown
   | Task 12: CLEANUP | ✅ DONE | Tests fixed, unused deps removed, Firebase files removed in follow-up cleanup |
   ```
-- **VALIDATE**: `grep "Task 12" .agents/plans/features/replace-firebase-with-express-sqlite.md`
+- **VALIDATE**: `grep "Task 12" .agents/plans/feature/replace-firebase-with-express-sqlite.md`
 - **EXPECTED**: Shows "✅ DONE" instead of "⚠️ PARTIAL"
 
 ### Task 23: REGENERATE package-lock.json
@@ -674,6 +674,6 @@ This cleanup is safe because:
 
 Firebase architecture fully documented in:
 - `.agents/implementation-reports/replace-firebase-with-express-sqlite.md` - Full migration details
-- `.agents/plans/features/replace-firebase-with-express-sqlite.md` - Original Firebase system documentation
+- `.agents/plans/feature/replace-firebase-with-express-sqlite.md` - Original Firebase system documentation
 - Git history - All deleted code preserved in commits
 - Updated docs (README, PRD) include "Historical Note" sections pointing to implementation report
