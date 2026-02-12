@@ -93,11 +93,11 @@ Planning should result in a planned feature document, like so:
 For example,
 
     .agents/
-    ├── plan/
-    │   └── features/
-    │       ├── feature-YYYY-MM-secure_password.md    # one-off change
-    |       ├── feature-users.md                      # desired state for users; evolves over time
-    │       └── feature-dashboard.md                  # desired state for dashboard; evolves over time 
+    ├── plans/
+    │   └── feature/
+    │       ├── YYYY-MM-secure-password.md    # one-off password change
+    |       ├── add-users.md                  # adds users; could be reused as you iterate
+    │       └── dashboard.md                  # desired state for dashboard; evolves over time 
     └ ...
 
 ### Start planning with the `prime` command

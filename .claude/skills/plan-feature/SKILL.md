@@ -375,12 +375,12 @@ Execute every command to ensure zero regressions and 100% feature correctness.
 
 ## Output Format
 
-**Filename**: `.agents/plan/features/{kebab-case-descriptive-name}.md`
+**Filename**: `.agents/plans/feature/{kebab-case-descriptive-name}.md`
 
 - Replace `{kebab-case-descriptive-name}` with short, descriptive feature name
 - Examples: `add-user-authentication.md`, `implement-search-api.md`, `refactor-database-layer.md`
 
-**Directory**: Create `.agents/plan/features` if it doesn't exist
+**Directory**: Create `.agents/plans/feature` if it doesn't exist
 
 ## Quality Criteria
 
