@@ -10,7 +10,7 @@ Wheel Spinner is an interactive spinning wheel web application for random select
 - Sound syncs up perfectly with visuals
 - Customizable colors, images, sounds, and more
 - Save and share wheels via short links
-- Optional quick remove to prevent repeat winners
+- Optional quick removal after spin to prevent repeat winners
 - Dark mode support
 - 6 language locales
 
