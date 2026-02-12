@@ -48,8 +48,8 @@ See CLAUDE.md for detailed architecture and development guidelines.
 This project was originally built with Firebase/GCP backend for the wheelofnames.com
 deployment. The codebase has been migrated to Express + SQLite for local self-hosting.
 See `.agents/implementation-reports/replace-firebase-with-express-sqlite.md` for
-migration details and original Firebase architecture. See original project at
-https://github.com/momander/wheel-spinner.
+migration details and original Firebase architecture. You can find the original project 
+at https://github.com/momander/wheel-spinner.
 
 ## License
 
