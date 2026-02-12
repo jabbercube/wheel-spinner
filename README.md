@@ -1,7 +1,5 @@
 # README
 
-**This is not an officially supported Google product.**
-
 Wheel Spinner is an interactive spinning wheel web application for random selection.
 
 ## Quick Start: Local Development
@@ -94,3 +92,6 @@ at https://github.com/momander/wheel-spinner.
 ## License
 
 Apache 2.0 - Originally a Google-sponsored open source project.
+
+**This is not an officially supported Google product.**
+
