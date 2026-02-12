@@ -34,36 +34,35 @@ nvm use 18
 - The server (`node backend/server.js`) does NOT need this flag, only webpack builds
 
 **Port Conflicts**:
-- Default port: 5000
-- macOS AirPlay Receiver may occupy port 5000
-- Workaround: `PORT=3000 node backend/server.js`
+- Default port: 3000
+- Workaround: `PORT=3001 node backend/server.js`
 
 ## Build & Development Commands
 
 **Setup:**
 ```bash
-nvm use 18                   # Activate Node 18
-npm install                  # Install frontend dependencies
+nvm use 18                          # Activate Node 18
+npm install                         # Install frontend dependencies
 ```
 
 **Local development:**
 ```bash
-npm run start:dev            # Build dev + start Express server
-npm run build:dev            # Build only (webpack dev config, output to dist/)
-node backend/server.js       # Start server only (after build)
-PORT=3000 node backend/server.js     # Use alternate port if 5000 conflicts
+npm run start:dev                   # Build dev + start Express server
+npm run build:dev                   # Build only (webpack dev config, output to dist/)
+node backend/server.js              # Start server only (after build)
+PORT=3001 node backend/server.js    # Use alternate port if 3000 conflicts
 ```
 
 **Test/Production builds:**
 ```bash
-npm run build:test              # Build with test config
-npm run build:prod              # Build with production config
+npm run build:test                  # Build with test config
+npm run build:prod                  # Build with production config
 ```
 
 **Run tests:**
 ```bash
-npm test                     # Mocha tests with Babel (test/*.js)
-                            # Current status: 116 tests passing, 0 failures
+npm test                            # Mocha tests with Babel (test/*.js)
+                                    # Current status: 116 tests passing, 0 failures
 ```
 
 ## Architecture

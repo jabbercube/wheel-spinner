@@ -372,7 +372,7 @@ Three environment configs: `dev.env`, `test.env`, `prod.env`
 
 ### Express REST API
 
-All API endpoints are prefixed with `/api/` and served by the Express server on port 5000 (configurable).
+All API endpoints are prefixed with `/api/` and served by the Express server on port 3000 (configurable).
 
 #### Wheel Storage & Sharing
 - `POST /api/shared-wheels` - Create a shared wheel
@@ -529,8 +529,8 @@ All API endpoints are prefixed with `/api/` and served by the Express server on 
 | `npm run build:test` | Test environment build |
 | `npm run build:prod` | Production build |
 | `npm test` | Run Mocha unit tests (116 tests) |
-| `node backend/server.js` | Start Express server (port 5000) |
-| `PORT=3000 node backend/server.js` | Start server on alternate port |
+| `node backend/server.js` | Start Express server (port 3000) |
+| `PORT=3001 node backend/server.js` | Start server on alternate port |
 
 ### Component Inventory (60+ Vue Components)
 **Pages (8):** wheelPage, faqPage, exportPage, privacyPolicyPage, translationsPage, wheelReviewPage, carouselPage, notFoundPage
