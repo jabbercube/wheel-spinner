@@ -24,7 +24,7 @@ See `CLAUDE.md` for detailed architecture and development guidelines.
 - **Database**: backend/data/wheelspinner.db (auto-created on first run)
 
 
-## Quick Start: Local Development
+## Quick Start: Local development
 
 1. Clone the repo
 2. Install Node 18: `nvm install 18 && nvm use 18`
@@ -33,7 +33,7 @@ See `CLAUDE.md` for detailed architecture and development guidelines.
 5. Open http://localhost:3000 (or `PORT=3001 node backend/server.js` if 3000 conflicts)
 
 
-## Quick Start: Docker (Recommended)
+## Quick Start: Docker 🐳 (Recommended) 
 
 No node.js installation required. Develop and run the app entirely in containers.
 
@@ -68,7 +68,7 @@ make help       # Show all available commands
 ```
 
 
-## Development Commands
+## Development commands
 
 **Build:**
 - `npm run build:dev` - Development build
@@ -84,7 +84,7 @@ make help       # Show all available commands
 - `npm test` - Run test suite (116 tests)
 
 
-## Historical Note
+## Historical note
 
 This project was originally built with Firebase/GCP backend for the wheelofnames.com
 deployment. The codebase has been migrated to Express + SQLite for local self-hosting.
