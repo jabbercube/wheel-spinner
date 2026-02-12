@@ -4,6 +4,16 @@ Wheel Spinner is an interactive spinning wheel web application for random select
 
 ![Wheel Spinner UI](docs/screenshot-main-ui.png)
 
+
+## Architecture
+
+- **Frontend**: Vue.js 2 SPA with canvas-based wheel rendering
+- **Backend**: Express API + SQLite database
+- **Database**: backend/data/wheelspinner.db (auto-created on first run)
+
+See `CLAUDE.md` for detailed architecture and development guidelines.
+
+
 ## Quick Start: Local Development
 
 1. Clone the repo
@@ -62,15 +72,6 @@ make help       # Show all available commands
 
 **Test:**
 - `npm test` - Run test suite (116 tests)
-
-
-## Architecture
-
-- **Frontend**: Vue.js 2 SPA with canvas-based wheel rendering
-- **Backend**: Express API + SQLite database
-- **Database**: backend/data/wheelspinner.db (auto-created on first run)
-
-See CLAUDE.md for detailed architecture and development guidelines.
 
 
 ## Features
