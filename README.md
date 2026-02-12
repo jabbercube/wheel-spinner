@@ -11,8 +11,6 @@ Wheel Spinner is an interactive spinning wheel web application for random select
 - **Backend**: Express API + SQLite database
 - **Database**: backend/data/wheelspinner.db (auto-created on first run)
 
-See `CLAUDE.md` for detailed architecture and development guidelines.
-
 
 ## Quick Start: Local Development
 
@@ -75,6 +73,8 @@ make help       # Show all available commands
 
 
 ## Features
+
+See `CLAUDE.md` for detailed architecture and development guidelines.
 
 - Interactive spinning wheel with visual/audio effects
 - Customizable colors, images, sounds
