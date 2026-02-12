@@ -1,6 +1,8 @@
-# README
+# Wheel Spinner
 
 Wheel Spinner is an interactive spinning wheel web application for random selection.
+
+![Wheel Spinner UI](docs/screenshot-main-ui.png)
 
 ## Quick Start: Local Development
 
