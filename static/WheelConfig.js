@@ -15,7 +15,7 @@ limitations under the License.
 */
 import * as Util from './Util.js';
 
-const WHEEL_DEFAULT_ENTRIES = [
+const DEFAULT_ENTRIES = [
   'Ali',
   'Beatriz',
   'Charles',
@@ -26,13 +26,11 @@ const WHEEL_DEFAULT_ENTRIES = [
   'Hanna',
 ];
 
-// Injected at build-time by webpack/dotenv-webpack via build/*.env
+// Injected at build-time by webpack/dotenv-webpack via build/*.env files
 // Support either ["A","B"] or [{text:"A"},{text:"B"}]
 function getDefaultEntryTextsFromEnv() {  
-  const raw = (typeof process !== 'undefined' && process.env)
-    ? process.env.WHEEL_DEFAULT_ENTRIES
-    : null;
-  if (!raw) return WHEEL_DEFAULT_ENTRIES;
+  const raw = process.env.WHEEL_DEFAULT_ENTRIES;
+  if (!raw) return DEFAULT_ENTRIES;
   try {
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed) && parsed.every(v => typeof v === 'string')) {
@@ -45,7 +43,7 @@ function getDefaultEntryTextsFromEnv() {
   catch (ex) {
     console.error(ex);
   }
-  return WHEEL_DEFAULT_ENTRIES;
+  return DEFAULT_ENTRIES;
 }
 
 export default class WheelConfig {
