@@ -116,7 +116,7 @@ jobs:
         run: npm ci
 
       - name: Build project
-        run: ./build_dev.sh
+        run: npm run build:dev
         env:
           NODE_OPTIONS: --openssl-legacy-provider
 
