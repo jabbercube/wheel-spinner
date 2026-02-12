@@ -234,8 +234,10 @@ wheel-spinner/
 │   │   ├── sv-SE.json
 │   │   └── en-PI.json         # Pirate English
 │   └── [60+ Vue components]   # UI components (dialogs, pickers, etc.)
-├── server.js                  # Express API server
-├── db.js                      # SQLite database initialization
+├── backend/                   # Backend code
+│   ├── server.js              # Express API server
+│   ├── db.js                  # SQLite database initialization
+│   └── wheelspinner.db        # SQLite database (auto-created)
 ├── build/                     # Webpack configs
 │   ├── base.config.js         # Shared webpack config
 │   ├── dev.config.js          # Development build
@@ -248,7 +250,6 @@ wheel-spinner/
 │   ├── test-Filters.js
 │   ├── test-CircularArray.js
 │   └── test-CircularCounter.js
-└── wheelspinner.db            # SQLite database (auto-created)
 ```
 
 ### Key Design Patterns
@@ -528,8 +529,8 @@ All API endpoints are prefixed with `/api/` and served by the Express server on 
 | `./build_test.sh` | Test environment build |
 | `./build_prod.sh` | Production build |
 | `npm test` | Run Mocha unit tests (116 tests) |
-| `node server.js` | Start Express server (port 5000) |
-| `PORT=3000 node server.js` | Start server on alternate port |
+| `node backend/server.js` | Start Express server (port 5000) |
+| `PORT=3000 node backend/server.js` | Start server on alternate port |
 
 ### Component Inventory (60+ Vue Components)
 **Pages (8):** wheelPage, faqPage, exportPage, privacyPolicyPage, translationsPage, wheelReviewPage, carouselPage, notFoundPage

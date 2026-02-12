@@ -10,7 +10,7 @@ Wheel Spinner - Interactive spinning wheel web application for random selection.
 2. Install Node 18: `nvm install 18 && nvm use 18`
 3. Run `npm install`
 4. Run `./build_and_serve_local.sh` or `npm run dev`
-5. Open http://localhost:5000 (or `PORT=3000 node server.js` if 5000 conflicts)
+5. Open http://localhost:5000 (or `PORT=3000 node backend/server.js` if 5000 conflicts)
 
 ## Development Commands
 
@@ -20,9 +20,9 @@ Wheel Spinner - Interactive spinning wheel web application for random selection.
 - `./build_prod.sh` - Production build
 
 **Run:**
-- `node server.js` - Start Express server (after build)
+- `node backend/server.js` - Start Express server (after build)
 - `npm run dev` - Build + start
-- `PORT=3000 node server.js` - Use alternate port
+- `PORT=3000 node backend/server.js` - Use alternate port
 
 **Test:**
 - `npm test` - Run test suite (116 tests)
@@ -31,7 +31,7 @@ Wheel Spinner - Interactive spinning wheel web application for random selection.
 
 - **Frontend**: Vue.js 2 SPA with canvas-based wheel rendering
 - **Backend**: Express API + SQLite database
-- **Database**: wheelspinner.db (auto-created on first run)
+- **Database**: backend/wheelspinner.db (auto-created on first run)
 
 See CLAUDE.md for detailed architecture and development guidelines.
 
