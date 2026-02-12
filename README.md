@@ -10,7 +10,7 @@ Wheel Spinner - Interactive spinning wheel web application for random selection.
 2. Install Node 18: `nvm install 18 && nvm use 18`
 3. Run `npm install`
 4. Run `npm run start:dev`
-5. Open http://localhost:5000 (or `PORT=3001 node backend/server.js` if 5000 conflicts)
+5. Open http://localhost:3000 (or `PORT=3001 node backend/server.js` if 3000 conflicts)
 
 ## Development Commands
 
