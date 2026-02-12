@@ -1,4 +1,4 @@
-# Agents Cheatsheet
+# Agents Guide
 
 ## Claude Code Skills
 Official skills doc: https://code.claude.com/docs/en/skills
