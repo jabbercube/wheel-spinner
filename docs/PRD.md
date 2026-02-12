@@ -524,10 +524,10 @@ All API endpoints are prefixed with `/api/` and served by the Express server on 
 | Command | Purpose |
 |---|---|
 | `npm install` | Install dependencies |
-| `./build_and_serve_local.sh` | Dev build + start Express server |
-| `./build_dev.sh` | Development build (output to dist/) |
-| `./build_test.sh` | Test environment build |
-| `./build_prod.sh` | Production build |
+| `npm run start:dev` | Dev build + start Express server |
+| `npm run build:dev` | Development build (output to dist/) |
+| `npm run build:test` | Test environment build |
+| `npm run build:prod` | Production build |
 | `npm test` | Run Mocha unit tests (116 tests) |
 | `node backend/server.js` | Start Express server (port 5000) |
 | `PORT=3000 node backend/server.js` | Start server on alternate port |

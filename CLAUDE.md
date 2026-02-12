@@ -30,7 +30,7 @@ nvm use 18
 
 **Webpack Build Requirements**:
 - Webpack requires `NODE_OPTIONS=--openssl-legacy-provider` flag (Node 18 + OpenSSL 3.0 compatibility)
-- This flag is already set in `build_dev.sh`
+- This flag is already set in `npm run build:dev`
 - The server (`node backend/server.js`) does NOT need this flag, only webpack builds
 
 **Port Conflicts**:
@@ -48,17 +48,16 @@ npm install                  # Install frontend dependencies
 
 **Local development:**
 ```bash
-./build_and_serve_local.sh   # Build dev + start Express server
-./build_dev.sh               # Build only (webpack dev config, output to dist/)
+npm run start:dev            # Build dev + start Express server
+npm run build:dev            # Build only (webpack dev config, output to dist/)
 node backend/server.js       # Start server only (after build)
-npm run dev                  # Build + start (package.json script)
 PORT=3000 node backend/server.js     # Use alternate port if 5000 conflicts
 ```
 
 **Test/Production builds:**
 ```bash
-./build_test.sh              # Build with test config
-./build_prod.sh              # Build with production config
+npm run build:test              # Build with test config
+npm run build:prod              # Build with production config
 ```
 
 **Run tests:**

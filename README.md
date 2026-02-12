@@ -9,19 +9,19 @@ Wheel Spinner - Interactive spinning wheel web application for random selection.
 1. Clone the repo
 2. Install Node 18: `nvm install 18 && nvm use 18`
 3. Run `npm install`
-4. Run `./build_and_serve_local.sh` or `npm run dev`
+4. Run `npm run start:dev`
 5. Open http://localhost:5000 (or `PORT=3000 node backend/server.js` if 5000 conflicts)
 
 ## Development Commands
 
 **Build:**
-- `./build_dev.sh` - Development build
-- `./build_test.sh` - Test build
-- `./build_prod.sh` - Production build
+- `npm run build:dev` - Development build
+- `npm run build:test` - Test build
+- `npm run build:prod` - Production build
 
 **Run:**
-- `node backend/server.js` - Start Express server (after build)
-- `npm run dev` - Build + start
+- `npm run start` or `node backend/server.js` - Start Express server (after build)
+- `npm run start:dev` - Build dev + start
 - `PORT=3000 node backend/server.js` - Use alternate port
 
 **Test:**
