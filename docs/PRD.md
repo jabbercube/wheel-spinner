@@ -353,6 +353,9 @@ Webpack produces 3 entry bundles:
 
 ### Configuration Management
 Environment variables managed via `build/*.env` files (not committed to repo):
+- `WHEEL_DEFAULT_ENTRIES` - List of names for default New wheel
+
+Legacy configuration that is no longer used:
 - `FUNCTION_PREFIX` — Cloud Functions base URL
 - `FIREBASE_API_KEY` — Firebase web API key
 - `FIREBASE_AUTH_DOMAIN` — Firebase auth domain

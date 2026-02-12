@@ -15,21 +15,45 @@ limitations under the License.
 */
 import * as Util from './Util.js';
 
+const WHEEL_DEFAULT_ENTRIES = [
+  'Ali',
+  'Beatriz',
+  'Charles',
+  'Diya',
+  'Eric',
+  'Fatima',
+  'Gabriel',
+  'Hanna',
+];
+
+// Injected at build-time by webpack/dotenv-webpack via build/*.env
+// Support either ["A","B"] or [{text:"A"},{text:"B"}]
+function getDefaultEntryTextsFromEnv() {  
+  const raw = (typeof process !== 'undefined' && process.env)
+    ? process.env.WHEEL_DEFAULT_ENTRIES
+    : null;
+  if (!raw) return WHEEL_DEFAULT_ENTRIES;
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.every(v => typeof v === 'string')) {
+      return parsed;
+    }
+    if (Array.isArray(parsed) && parsed.every(v => v && typeof v.text === 'string')) {
+      return parsed.map(v => v.text);
+    }
+  }
+  catch (ex) {
+    console.error(ex);
+  }
+  return WHEEL_DEFAULT_ENTRIES;
+}
+
 export default class WheelConfig {
 
   constructor(winnerMessage) {
     this.title = '';
     this.description = '';
-    this.entries = [
-      {text: 'Ali'},
-      {text: 'Beatriz'},
-      {text: 'Charles'},
-      {text: 'Diya'},
-      {text: 'Eric'},
-      {text: 'Fatima'},
-      {text: 'Gabriel'},
-      {text: 'Hanna'},
-    ];
+    this.entries = getDefaultEntryTextsFromEnv().map(text => ({text: text}));
     this.colorSettings = [
       {color: '#3369E8', enabled: true},
       {color: '#D50F25', enabled: true},
