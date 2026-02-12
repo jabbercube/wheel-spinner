@@ -75,7 +75,7 @@ app.use(express.static(path.join(__dirname, '../dist')));
 ```javascript
 // This pattern works in both locations:
 const DB_PATH = path.join(__dirname, 'wheelspinner.db');
-// Result: root/wheelspinner.db → backend/wheelspinner.db (automatic)
+// Result: root/wheelspinner.db → backend/data/wheelspinner.db (automatic)
 ```
 
 **NPM Script Pattern** (from package.json):
@@ -117,7 +117,7 @@ Create the backend directory and move backend files atomically.
 - Create `backend/` directory
 - Move `server.js` to `backend/server.js`
 - Move `db.js` to `backend/db.js`
-- Move `wheelspinner.db` to `backend/wheelspinner.db` (if it exists)
+- Move `wheelspinner.db` to `backend/data/wheelspinner.db` (if it exists)
 
 ### Phase 3: Code Updates
 
@@ -186,9 +186,9 @@ IMPORTANT: Execute every task in order, top to bottom. Each task is atomic and i
 
 ### MOVE wheelspinner.db to backend/ (if exists)
 
-- **IMPLEMENT**: Move `wheelspinner.db` to `backend/wheelspinner.db` if it exists
+- **IMPLEMENT**: Move `wheelspinner.db` to `backend/data/wheelspinner.db` if it exists
 - **GOTCHA**: File may not exist if server hasn't been run yet (this is OK)
-- **VALIDATE**: `if [ -f wheelspinner.db ]; then mv wheelspinner.db backend/ && echo "MOVED"; else echo "SKIP - file doesn't exist"; fi`
+- **VALIDATE**: `if [ -f wheelspinner.db ]; then mv wheelspinner.db backend/data/ && echo "MOVED"; else echo "SKIP - file doesn't exist"; fi`
 
 ---
 
@@ -268,10 +268,10 @@ IMPORTANT: Execute every task in order, top to bottom. Each task is atomic and i
 
 - **IMPLEMENT**: Update line 9 in `.gitignore` (optional but recommended)
 - **BEFORE**: `wheelspinner.db*`
-- **AFTER**: `backend/wheelspinner.db*`
+- **AFTER**: `backend/data/wheelspinner.db*`
 - **REASON**: More specific pattern prevents accidentally ignoring unrelated files
 - **GOTCHA**: If you skip this, the old pattern will still work (matches any path)
-- **VALIDATE**: `grep "backend/wheelspinner.db" .gitignore && echo "UPDATED" || echo "USING OLD PATTERN"`
+- **VALIDATE**: `grep "backend/data/wheelspinner.db" .gitignore && echo "UPDATED" || echo "USING OLD PATTERN"`
 
 ---
 
@@ -281,7 +281,7 @@ IMPORTANT: Execute every task in order, top to bottom. Each task is atomic and i
 - **PATTERN**: Update all references to `server.js`, `db.js`, and `wheelspinner.db` to include `backend/` prefix
 - **KEY CHANGES**:
   - Line 92: "**Server**: `backend/server.js` (Express 4.21.0) — 451 lines"
-  - Line 98: "- SQLite database at `backend/wheelspinner.db` (auto-created on first run)"
+  - Line 98: "- SQLite database at `backend/data/wheelspinner.db` (auto-created on first run)"
   - Line 134-136: Update "Key Files" section with backend/ paths
 - **VALIDATE**: `grep "backend/server.js" CLAUDE.md | wc -l` (should have multiple matches)
 
@@ -314,8 +314,8 @@ IMPORTANT: Execute every task in order, top to bottom. Each task is atomic and i
 
 - **IMPLEMENT**: Update line 34 in `README.md`
 - **BEFORE**: "- **Database**: wheelspinner.db (auto-created on first run)"
-- **AFTER**: "- **Database**: backend/wheelspinner.db (auto-created on first run)"
-- **VALIDATE**: `grep "backend/wheelspinner.db" README.md && echo "UPDATED" || echo "FAILED"`
+- **AFTER**: "- **Database**: backend/data/wheelspinner.db (auto-created on first run)"
+- **VALIDATE**: `grep "backend/data/wheelspinner.db" README.md && echo "UPDATED" || echo "FAILED"`
 
 ---
 
@@ -568,7 +568,7 @@ git log --follow backend/db.js | head -5
 
 2. **Static file path**: Changed from `'dist'` to `'../dist'` because Express's `express.static()` resolves paths relative to `__dirname` (the directory containing the script)
 
-3. **Database path**: No change needed to `db.js` because `path.join(__dirname, 'wheelspinner.db')` automatically resolves to `backend/wheelspinner.db` after the move
+3. **Database path**: No change needed to `db.js` because `path.join(__dirname, 'data', 'wheelspinner.db')` automatically resolves to `backend/data/wheelspinner.db` after the move
 
 4. **ESLint targets**: Changed from listing individual files (`server.js db.js`) to directory (`backend/`) for easier maintenance as backend grows
 

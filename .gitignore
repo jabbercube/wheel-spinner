@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Database
-backend/wheelspinner.db*
+wheelspinner.db*
 
 # Runtime data
 pids

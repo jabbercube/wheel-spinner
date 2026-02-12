@@ -96,7 +96,7 @@ npm test                     # Mocha tests with Babel (test/*.js)
   - JSON body parser (2MB limit)
   - SPA fallback routing (xxx-xxx pattern → shared-wheel.html)
 - **Database**: `backend/db.js` (better-sqlite3 11.0.0) — 63 lines
-  - SQLite database at `backend/wheelspinner.db` (auto-created on first run)
+  - SQLite database at `backend/data/wheelspinner.db` (auto-created on first run)
   - WAL mode enabled
   - 5 tables: wheels, shared_wheels, settings, admins, carousels
 - **Authentication**: Single default user (`uid: 'default'`), no auth middleware
@@ -133,7 +133,7 @@ npm test                     # Mocha tests with Babel (test/*.js)
 **Current Backend:**
 - `backend/server.js` — Express API server (451 lines, 30+ endpoints)
 - `backend/db.js` — SQLite database initialization and schema (63 lines)
-- `backend/wheelspinner.db` — SQLite database file (auto-created, gitignored)
+- `backend/data/wheelspinner.db` — SQLite database file (auto-created, gitignored)
 
 **Frontend Core:**
 - `static/index.js` — Vue app entry point
