@@ -50,13 +50,20 @@
   },
   "scripts": {
     "start": "node backend/server.js",
-    "dev": "npm run build:dev && node backend/server.js",
-    "build:dev": "./build_dev.sh",
+    "clean": "rm -rf dist/*",
+    "build:dev": "npm run clean && NODE_OPTIONS=--openssl-legacy-provider webpack --config build/dev.config.js",
+    "build:test": "npm run clean && webpack --config build/test.config.js",
+    "build:prod": "npm run clean && webpack --config build/prod.config.js",
+    "dev": "npm run build:dev && npm run start",
     "test": "mocha --require @babel/register",
+    "test:debug": "mocha debug --require @babel/register",
     "test:coverage": "nyc npm test",
     "test:coverage:report": "nyc report --reporter=text-lcov > coverage/lcov.info",
     "lint": "eslint --ext .js,.vue static/ test/ backend/",
-    "lint:fix": "eslint --ext .js,.vue static/ test/ backend/ --fix"
+    "lint:fix": "eslint --ext .js,.vue static/ test/ backend/ --fix",
+    "generate:stats": "webpack --config build/prod.config.js --profile --json > webpack-stats.json",
+    "analyze:stats": "open https://chrisbateman.github.io/webpack-visualizer",
+    "cloc": "npx cloc --vcs=git --exclude-ext=json,xml --exclude-dir=old_bundles"
   },
   "repository": {
     "type": "git",
