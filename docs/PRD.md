@@ -530,7 +530,7 @@ All API endpoints are prefixed with `/api/` and served by the Express server on 
 | `npm run build:prod` | Production build |
 | `npm test` | Run Mocha unit tests (116 tests) |
 | `node backend/server.js` | Start Express server (port 5000) |
-| `PORT=3000 node backend/server.js` | Start server on alternate port |
+| `PORT=3001 node backend/server.js` | Start server on alternate port |
 
 ### Component Inventory (60+ Vue Components)
 **Pages (8):** wheelPage, faqPage, exportPage, privacyPolicyPage, translationsPage, wheelReviewPage, carouselPage, notFoundPage

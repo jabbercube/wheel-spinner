@@ -36,7 +36,7 @@ nvm use 18
 **Port Conflicts**:
 - Default port: 5000
 - macOS AirPlay Receiver may occupy port 5000
-- Workaround: `PORT=3000 node backend/server.js`
+- Workaround: `PORT=3001 node backend/server.js`
 
 ## Build & Development Commands
 
@@ -51,7 +51,7 @@ npm install                  # Install frontend dependencies
 npm run start:dev            # Build dev + start Express server
 npm run build:dev            # Build only (webpack dev config, output to dist/)
 node backend/server.js       # Start server only (after build)
-PORT=3000 node backend/server.js     # Use alternate port if 5000 conflicts
+PORT=3001 node backend/server.js     # Use alternate port if 5000 conflicts
 ```
 
 **Test/Production builds:**
