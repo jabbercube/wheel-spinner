@@ -402,7 +402,7 @@ app.get('*', (req, res) => {
     ? 'shared-wheel.html'
     : 'index.html';
 
-  res.sendFile(path.join(__dirname, 'dist', htmlFile));
+  res.sendFile(path.join(__dirname, '../dist', htmlFile));
 });
 
 // --- Helper functions ---
