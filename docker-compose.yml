@@ -13,10 +13,11 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - wheel-data:/app/backend/data
+      - wheel-spinner-data:/app/backend/data
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - NODE_OPTIONS=--openssl-legacy-provider
     restart: unless-stopped
     profiles:
       - prod
@@ -36,7 +37,7 @@ services:
       # Use named volume for node_modules (don't overwrite)
       - /app/node_modules
       # Persist database across restarts
-      - wheel-data:/app/backend/data
+      - wheel-spinner-data:/app/backend/data
     environment:
       - NODE_ENV=development
       - PORT=3000
@@ -57,7 +58,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - wheel-data:/app/backend/data
+      - wheel-spinner-data:/app/backend/data
     environment:
       - NODE_ENV=test
       - PORT=3000
@@ -68,5 +69,5 @@ services:
 
 # Named volume for database persistence
 volumes:
-  wheel-data:
+  wheel-spinner-data:
     driver: local
