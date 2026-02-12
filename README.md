@@ -4,8 +4,20 @@ Wheel Spinner is an interactive spinning wheel web application for random select
 
 ![Wheel Spinner UI](docs/screenshot-main-ui.png)
 
+## Features
+
+- Interactive spinning wheel with cool animated effects
+- Sound syncs up perfectly with visuals
+- Customizable colors, images, sounds, and more
+- Save and share wheels via short links
+- Optional quick remove to prevent repeat winners
+- Dark mode support
+- 6 language locales
+
 
 ## Architecture
+
+See `CLAUDE.md` for detailed architecture and development guidelines.
 
 - **Frontend**: Vue.js 2 SPA with canvas-based wheel rendering
 - **Backend**: Express API + SQLite database
@@ -70,17 +82,6 @@ make help       # Show all available commands
 
 **Test:**
 - `npm test` - Run test suite (116 tests)
-
-
-## Features
-
-See `CLAUDE.md` for detailed architecture and development guidelines.
-
-- Interactive spinning wheel with visual/audio effects
-- Customizable colors, images, sounds
-- Save/share wheels via short links (XXX-XXX format)
-- 6 language locales
-- PWA with offline support
 
 
 ## Historical Note
