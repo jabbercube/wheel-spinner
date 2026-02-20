@@ -35,7 +35,6 @@ See `CLAUDE.md` for detailed architecture and development guidelines.
 
 This project was originally built using Firebase/GCP backend for [wheelofnames](https://wheelofnames.com). 
 You can find the original forked project at [github.com/momander/wheel-spinner](https://github.com/momander/wheel-spinner).
-
 This fork has been migrated to use Express + SQLite for self-hosting support.
 See `.agents/implementation-reports/replace-firebase-with-express-sqlite.md` for
 migration details. 
