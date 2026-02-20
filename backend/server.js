@@ -7,6 +7,17 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 
+// Dynamic runtime config — loaded by the frontend before the app bundle.
+// Allows env vars like WHEEL_DEFAULT_ENTRIES to be set in docker-compose
+// without rebuilding the image.
+app.get('/config.js', (req, res) => {
+  const config = {
+    wheelDefaultEntries: process.env.WHEEL_DEFAULT_ENTRIES || null,
+  };
+  res.setHeader('Content-Type', 'application/javascript');
+  res.send(`window.__WS_CONFIG__ = ${JSON.stringify(config)};`);
+});
+
 // Serve static files from dist/
 app.use(express.static(path.join(__dirname, '../dist')));
 

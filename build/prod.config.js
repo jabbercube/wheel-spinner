@@ -28,8 +28,8 @@ module.exports = merge(baseConfig, {
     }),
     // Fallback defaults for any process.env.* not defined by dotenv above.
     // Ensures `process` is never left as an undefined runtime reference.
+    // WHEEL_DEFAULT_ENTRIES is handled at runtime via /config.js, not here.
     new webpack.DefinePlugin({
-      'process.env.WHEEL_DEFAULT_ENTRIES': JSON.stringify(''),
       'process.env.FIREBASE_API_KEY': JSON.stringify(''),
       'process.env.OAUTH_CLIENT_ID': JSON.stringify(''),
       'process.env.GCP_APP_ID': JSON.stringify(''),

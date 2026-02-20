@@ -10,6 +10,9 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - NODE_OPTIONS=--openssl-legacy-provider
+      # Optional: override the default wheel entries shown to new users.
+      # Value must be a JSON array of strings, e.g. '["Alice","Bob","Carol"]'
+      #- WHEEL_DEFAULT_ENTRIES=["Alice","Bob","Carol"]
     restart: unless-stopped
 
 volumes:
