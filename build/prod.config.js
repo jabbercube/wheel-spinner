@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+const webpack = require('webpack');
 const dotenv = require('dotenv-webpack');
 const {merge} = require('webpack-merge');
 const baseConfig = require('./base.config.js');
@@ -20,8 +21,18 @@ const baseConfig = require('./base.config.js');
 module.exports = merge(baseConfig, {
   mode: 'production',
   plugins: [
+    // Read build/prod.env if present; silent: true skips errors when missing.
     new dotenv({
-      path: './build/prod.env'
+      path: './build/prod.env',
+      silent: true,
+    }),
+    // Fallback defaults for any process.env.* not defined by dotenv above.
+    // Ensures `process` is never left as an undefined runtime reference.
+    new webpack.DefinePlugin({
+      'process.env.WHEEL_DEFAULT_ENTRIES': JSON.stringify(''),
+      'process.env.FIREBASE_API_KEY': JSON.stringify(''),
+      'process.env.OAUTH_CLIENT_ID': JSON.stringify(''),
+      'process.env.GCP_APP_ID': JSON.stringify(''),
     }),
   ],
 })
