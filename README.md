@@ -33,38 +33,27 @@ See `CLAUDE.md` for detailed architecture and development guidelines.
 5. Open http://localhost:3000 (or `PORT=3001 node backend/server.js` if 3000 conflicts)
 
 
-## Quick Start: Docker 🐳 (Recommended) 
+## Quick Start: Docker 🐳 (Recommended)
 
-No node.js installation required. Develop and run the app entirely in containers.
+No Node.js installation required.
 
-**Development (with live reload):**
 ```bash
-make dev        # or: docker-compose --profile dev up
-```
-- Source code mounted as volume for live editing
-- Database persisted in Docker volume
-- Access at http://localhost:3000
-
-**Production:**
-```bash
-make prod       # or: docker-compose --profile prod up -d
-```
-- Optimized production build
-- Runs as non-root user
-- Database persisted in Docker volume
-
-**Run tests in container:**
-```bash
-make test-run   # or: docker-compose --profile test run --rm wheel-spinner-test npm test
+make build      # Build image from Dockerfile
+make run        # Start container at http://localhost:3000
 ```
 
-**Other useful commands:**
+**Other commands:**
 ```bash
-make shell      # Open shell in dev container
-make logs       # View container logs
-make down       # Stop all containers
-make clean      # Stop and remove volumes
+make stop       # Stop and remove container
+make logs       # Tail container logs
+make shell      # Open shell in running container
+make clean      # Stop container and delete data volume
 make help       # Show all available commands
+```
+
+**Override default wheel entries at runtime (no rebuild needed):**
+```bash
+make run WHEEL_DEFAULT_ENTRIES='["Alice","Bob","Carol"]'
 ```
 
 

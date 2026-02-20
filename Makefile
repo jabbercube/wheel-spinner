@@ -1,7 +1,8 @@
 # Makefile for Wheel Spinner
 # Uses plain docker commands — no docker compose required.
+# Always builds from the local Dockerfile.
 
-IMAGE     = ghcr.io/jabbercube/wheel-spinner:latest
+IMAGE     = wheel-spinner
 CONTAINER = wheel-spinner
 VOLUME    = wheel-spinner-data
 PORT      = 3000
@@ -10,15 +11,14 @@ PORT      = 3000
 #   make run WHEEL_DEFAULT_ENTRIES='["Alice","Bob","Carol"]'
 WHEEL_DEFAULT_ENTRIES ?=
 
-.PHONY: help build run stop pull logs shell clean
+.PHONY: help build run stop logs shell clean
 
 help:
 	@echo "Wheel Spinner - Docker Commands"
 	@echo ""
 	@echo "  make build   - Build image from Dockerfile"
-	@echo "  make run     - Run container (pulls image if not present)"
+	@echo "  make run     - Run container"
 	@echo "  make stop    - Stop and remove container"
-	@echo "  make pull    - Pull latest image from GHCR"
 	@echo "  make logs    - Tail container logs"
 	@echo "  make shell   - Open shell in running container"
 	@echo "  make clean   - Stop container and delete data volume"
@@ -44,9 +44,6 @@ run:
 
 stop:
 	docker stop $(CONTAINER) && docker rm $(CONTAINER)
-
-pull:
-	docker pull $(IMAGE)
 
 logs:
 	docker logs -f $(CONTAINER)
