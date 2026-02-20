@@ -2,6 +2,7 @@
 
 To deploy this app in production see [docker-compose.yml](/docker-compose.yml).
 
+Find the published image versions at https://github.com/jabbercube/wheel-spinner/pkgs/container/wheel-spinner.
 
 
 ## Building the Image
