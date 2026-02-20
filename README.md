@@ -27,9 +27,8 @@ See `CLAUDE.md` for detailed architecture and development guidelines.
 
 ## Quick Start
 
-See [docs/quickstart.md](docs/quickstart.md) for local development and Docker instructions.
-
-See [docs/docker.md](docs/docker.md) for the full Docker guide including configuration and data persistence.
+- [docs/quickstart.md](docs/quickstart.md) - local development and project setup
+- [docs/docker.md](docs/docker.md) - docker guide with recommended deployment instructions
 
 
 ## Project history
