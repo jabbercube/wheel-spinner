@@ -18,7 +18,7 @@ argument-hint: "[feature-id]"
 ### 2. Understand our current workflow
 
 - Review global rules document `CLAUDE.md`
-- Review product requirement document `/docs/PRD.md`
+- Review product requirement document `/docs/product_requirements_document.md`
 - Review any relevant context-modules reference documents `/.agents/context-modules/`
 - Review used project AI agent skills `/.claude/skills/`
 - Review any documents referenced by the system review document

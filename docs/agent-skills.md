@@ -1,6 +1,5 @@
-# Agents Guide
+# Agents Skills
 
-## Claude Code Skills
 Official skills doc: https://code.claude.com/docs/en/skills
 
 ### Built-in
@@ -53,7 +52,7 @@ Fix, release, and deploy the codebase.
 
 ## Key concepts
 ### Prioritize PRD-first development
-Create documentation before you code. Your `docs/PRD.md` becomes the source of truth for every AI 
+Create documentation before you code. Your `docs/product_requirements_document.md` becomes the source of truth for every AI
 conversation and for each granular feature. Without it AI can make bad assumptions and will context drift. 
 So for:
 - New projects:  Full PRD with features broken down into phases

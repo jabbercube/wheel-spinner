@@ -461,4 +461,4 @@ Base URL: `/api`
 - `CLAUDE.md` — Development guidelines and architecture details
 - `.agents/plans/feature/replace-firebase-with-express-sqlite.md` — Migration plan
 - `.agents/implementation-reports/replace-firebase-with-express-sqlite.md` — Migration report
-- `AGENTS_GUIDE.md` — Agent workflow and skills reference
+- `agent-skills.md` — Agent workflow and skills reference
