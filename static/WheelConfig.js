@@ -26,10 +26,12 @@ const DEFAULT_ENTRIES = [
   'Hanna',
 ];
 
-// Injected at build-time by webpack/dotenv-webpack via build/*.env files
+// Read at runtime from window.__WS_CONFIG__ (served by /config.js).
 // Support either ["A","B"] or [{text:"A"},{text:"B"}]
-function getDefaultEntryTextsFromEnv() {  
-  const raw = process.env.WHEEL_DEFAULT_ENTRIES;
+function getDefaultEntryTextsFromEnv() {
+  const raw = (typeof window !== 'undefined' && window.__WS_CONFIG__)
+    ? window.__WS_CONFIG__.wheelDefaultEntries
+    : null;
   if (!raw) return DEFAULT_ENTRIES;
   try {
     const parsed = JSON.parse(raw);
