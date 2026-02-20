@@ -1,15 +1,7 @@
-version: '3.8'
-
 services:
-  # Production service
   wheel-spinner:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: production
-      args:
-        BUILD_ENV: prod
-    container_name: wheel-spinner-prod
+    image: ghcr.io/jabbercube/wheel-spinner:latest
+    container_name: wheel-spinner
     ports:
       - "3000:3000"
     volumes:
@@ -19,55 +11,7 @@ services:
       - PORT=3000
       - NODE_OPTIONS=--openssl-legacy-provider
     restart: unless-stopped
-    profiles:
-      - prod
 
-  # Development service - supports live coding
-  wheel-spinner-dev:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: development
-    container_name: wheel-spinner-dev
-    ports:
-      - "3000:3000"
-    volumes:
-      # Mount source code for live development
-      - .:/app
-      # Use named volume for node_modules (don't overwrite)
-      - /app/node_modules
-      # Persist database across restarts
-      - wheel-spinner-data:/app/backend/data
-    environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - NODE_OPTIONS=--openssl-legacy-provider
-    restart: unless-stopped
-    profiles:
-      - dev
-
-  # Test service - for running tests in container
-  wheel-spinner-test:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: builder
-      args:
-        BUILD_ENV: test
-    container_name: wheel-spinner-test
-    ports:
-      - "3000:3000"
-    volumes:
-      - wheel-spinner-data:/app/backend/data
-    environment:
-      - NODE_ENV=test
-      - PORT=3000
-    command: node backend/server.js
-    restart: unless-stopped
-    profiles:
-      - test
-
-# Named volume for database persistence
 volumes:
   wheel-spinner-data:
     driver: local
