@@ -31,15 +31,13 @@ See [docs/quickstart.md](docs/quickstart.md) for local development and Docker in
 
 See [docs/docker.md](docs/docker.md) for the full Docker guide including configuration and data persistence.
 
-To deploy this app in production see [docker-compose.yml](docker-compose.yml).
 
-
-## Historical note
+## Project history
 
 This project was originally built using Firebase/GCP backend for [wheelofnames](https://wheelofnames.com). 
-Find the original forked project at [github.com/momander/wheel-spinner](https://github.com/momander/wheel-spinner).
+You can find the original forked project at [github.com/momander/wheel-spinner](https://github.com/momander/wheel-spinner).
 
-This forked version has been migrated to Express + SQLite to support local self-hosting.
+This fork has been migrated to use Express + SQLite for self-hosting support.
 See `.agents/implementation-reports/replace-firebase-with-express-sqlite.md` for
 migration details. 
 

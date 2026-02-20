@@ -1,5 +1,9 @@
 # Docker Guide
 
+To deploy this app in production see [docker-compose.yml](/docker-compose.yml).
+
+
+
 ## Building the Image
 
 ```bash
