@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   # Production service
+  # To use a pre-built image from GHCR instead of building locally:
+  #   COMPOSE_WHEEL_IMAGE=ghcr.io/<your-github-username>/wheel-spinner:latest docker compose --profile prod up
   wheel-spinner:
+    image: ${COMPOSE_WHEEL_IMAGE:-wheel-spinner-local}
     build:
       context: .
       dockerfile: Dockerfile
