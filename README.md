@@ -86,10 +86,10 @@ make help       # Show all available commands
 
 ## Historical note
 
-This project was originally built with Firebase/GCP backend for https://wheelofnames.com. 
-Find the original forked project at https://github.com/momander/wheel-spinner.
+This project was originally built using Firebase/GCP backend for [wheelofnames](https://wheelofnames.com). 
+Find the original forked project at [github.com/momander/wheel-spinner](https://github.com/momander/wheel-spinner).
 
-This forked codebase has been migrated to Express + SQLite for local self-hosting.
+This forked version has been migrated to Express + SQLite to support local self-hosting.
 See `.agents/implementation-reports/replace-firebase-with-express-sqlite.md` for
 migration details. 
 
